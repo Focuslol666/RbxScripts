@@ -32,6 +32,8 @@ if character then
     end
 end
 
+game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Healthbar.Effects.SpeedBoost.Visible = true
+
 end)
  
 shadow.Unequipped:Connect(function()
@@ -49,6 +51,8 @@ if character then
         humanoid.WalkSpeed = math.max(humanoid.WalkSpeed - 4, 0)
     end
 end
+
+game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Healthbar.Effects.SpeedBoost.Visible = false
 
 end)
 
