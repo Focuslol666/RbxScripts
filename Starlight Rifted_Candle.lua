@@ -18,12 +18,38 @@ local LeftC1 = LeftArm.LeftShoulder.C1
         end
 shadow.Equipped:Connect(function()
 setupCrucifix(shadow)
+
+local character = game.Players.LocalPlayer.Character
+
+if character then
+   
+    local humanoid = character:FindFirstChild("Humanoid")
+    
+    
+    if humanoid then
+       
+        humanoid.WalkSpeed = humanoid.WalkSpeed + 4
+    end
+end
+
 end)
  
 shadow.Unequipped:Connect(function()
         RightArm.Name = "RightUpperArm"
         
         RightArm.RightShoulder.C1 = RightC1
+local character = game.Players.LocalPlayer.Character
+
+if character then
+
+    local humanoid = character:FindFirstChild("Humanoid")
+    
+    if humanoid then
+    
+        humanoid.WalkSpeed = math.max(humanoid.WalkSpeed - 4, 0)
+    end
+end
+
 end)
 
 require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("原作者: FOCUS_MAX与baichuangtin", true)
