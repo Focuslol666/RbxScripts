@@ -62,7 +62,7 @@ require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("
 wait(2)
 require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("模型: rbxassetid://88396533523807 (公用)", true)
 wait(2)
-require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("@Sanren 散人你个人机 (不接受任何反驳)", true)
+require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("@Sanren 散人你个人机 (不接受反驳)", true)
 wait(2)
 require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("@DY Film_A-101 还有你, 你就是个机八 (#电影NMSL#)", true)
 wait(3)
