@@ -1,4 +1,5 @@
-
+--Made by noonie#0001(Scripter) and Ping#1841(Music composer and Modeler) [Leaked Version]
+--I'm not Original Developer... 💀💀💀
 function GetGitSoundID(GithubSnd,SoundName)
 	SoundName=tostring(SoundName)
 	local url=GithubSnd
