@@ -6,7 +6,7 @@ game:GetService("StarterGui"):SetCore("SendNotification",{
 wait(4.5)
 game.Players.LocalPlayer.Character.Humanoid.Health = 0
 print("Fuck You")
-warn("Holy shit bro")
+warn("Holy shit Motherfucker")
 error("You son of a bitch")
 wait(0.01)
 local spawn_nm = Instance.new("Sound", workspace)
