@@ -1,10 +1,11 @@
 game:GetService("StarterGui"):SetCore("SendNotification",{
 		Title = "FUCK YOU",
-		Text = "Loading DropKick... please wait, Holy Shit Bro",
+		Text = "Loading DropKick... please wait, Shit Bro or Bitch",
 		Duration = 3
 	})
 wait(4.5)
 game.Players.LocalPlayer.Character.Humanoid.Health = 0
+error("You son of a bitch")
 wait(0.01)
 local spawn_nm = Instance.new("Sound", workspace)
  
