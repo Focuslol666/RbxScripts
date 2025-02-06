@@ -1,6 +1,6 @@
 game:GetService("StarterGui"):SetCore("SendNotification",{
 		Title = "FUCK YOU",
-		Text = "Loading DropKick... Please wait, Shit Bro",
+		Text = "Loading DropKick... please wait, Holy Shit Bro",
 		Duration = 3
 	})
 wait(4.5)
