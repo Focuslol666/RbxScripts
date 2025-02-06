@@ -11,5 +11,5 @@ spawn_nm.SoundId = "rbxassetid://8350106890"
 spawn_nm.Volume = 10
  
 spawn_nm:Play()
-wait(0.01)
+wait(0)
 game.Players.LocalPlayer:Kick("20-20-20  GET OUT!")
