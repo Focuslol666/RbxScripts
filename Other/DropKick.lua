@@ -1,3 +1,4 @@
+-- Fool Script 🤣👻👽
 game:GetService("StarterGui"):SetCore("SendNotification",{
 		Title = "FUCK YOU",
 		Text = "Loading DropKick... please wait, Shit Bro or Bitch",
