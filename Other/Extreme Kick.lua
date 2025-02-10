@@ -53,3 +53,5 @@ spawn_nm:Play()
 error("KICKED!!!")
 wait(0)
 game.Players.LocalPlayer:Kick("YOU DIED, GET OUT!")
+
+-- Use it to troll your friends! 🤓☝️
