@@ -1,4 +1,5 @@
 -- Fool Script (Just for fun) 🤣👻👽
+
 game:GetService("StarterGui"):SetCore("SendNotification",{
 		Title = "FUCK YOU",
 		Text = "Loading Extreme_Kick... please wait, Gays and Bitches",
