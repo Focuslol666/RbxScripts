@@ -54,4 +54,4 @@ error("KICKED!!!")
 wait(0)
 game.Players.LocalPlayer:Kick("YOU DIED, GET OUT!")
 
--- Use it to troll your friends! 🤓☝️
+-- It's a good choice to use this script to troll your friends! 🤓☝️
