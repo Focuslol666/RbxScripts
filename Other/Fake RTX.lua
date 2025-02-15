@@ -1,4 +1,4 @@
--- The raw file is not mine. I just uploaded it to Github. Raw file is below.
+-- The raw file is not mine, I just uploaded it to Github. Raw file is below.
 
 -- RTX OMG
 
