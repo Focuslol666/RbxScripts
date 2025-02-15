@@ -1,4 +1,6 @@
--- Light Group (Chinese Edition of TikTok)
+-- by Focus Group (Chinese Edition of TikTok)
+-- Escape as quickly as possible and gain hidden achievement!
+
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
