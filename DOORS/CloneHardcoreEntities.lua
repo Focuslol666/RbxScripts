@@ -3,7 +3,7 @@ game:GetService("StarterGui"):SetCore("SendNotification",{
 		Text = "Loading model",
 		Duration = 3
 	})
-
+wait(3)
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
