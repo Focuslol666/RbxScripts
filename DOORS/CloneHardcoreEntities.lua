@@ -1,6 +1,6 @@
 game:GetService("StarterGui"):SetCore("SendNotification",{
-		Title = "加载中...",
-		Text = "正在加载脚本",
+		Title = "Loading...",
+		Text = "Loading model",
 		Duration = 3
 	})
 
