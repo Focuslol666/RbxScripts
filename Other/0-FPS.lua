@@ -3,3 +3,5 @@ while true do
   warn("Your Client FPS: 0 !!")
   error("Your Client FPS: 0 !!!")
 end
+
+-- Don't ask me why I use three print types, because I think it's cool... 🧐🧐🧐
