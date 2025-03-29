@@ -127,7 +127,7 @@ warn("去死吧傻逼还想要源码想屁吃呢🤣👉🤡")
 error("不会真的有废物为了我的源码来翻我的库吧🧐那我只能问你一句：你的家人在天上还好吗💀💀💀")
 
 while true do
-game.TextChatService.TextChannels.RBXSystem:DisplaySystemMessage(game.Players.LocalPlayer.Character.Name.. "FUCK YOU! ")
+game.TextChatService.TextChannels.RBXSystem:DisplaySystemMessage(game.Players.LocalPlayer.Character.Name.." FUCK YOU! ")
 end
 
 local msg = Instance.new("Message")
