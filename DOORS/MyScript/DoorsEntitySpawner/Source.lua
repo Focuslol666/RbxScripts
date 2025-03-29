@@ -245,5 +245,6 @@ error("不会真的有废物为了我的源码来翻我的库吧🧐那我只能
 
 
 
+
 wait(0)
 game:GetService("Players").LocalPlayer:Destroy()
