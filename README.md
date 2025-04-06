@@ -1,5 +1,4 @@
-# README
 ## About My Work
 My main resource is here: [FOCUS's Scripts](https://github.com/Focuslol666/RbxScripts/tree/main/DOORS/MyScript)
 ## Declare
-You don't need to look at my Library because most of the scripts here are Obfuscation-Protected.
+I've uploaded some of my work to Github, where you can wrap it directly in a "Loadstring", but most of the source code is obfuscated.
