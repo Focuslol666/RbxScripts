@@ -5,7 +5,7 @@ I've uploaded some of my work to Github, and you can use it by wrapping it in "`
 
 ```lua
 -- For Example
-loadstring(game:HttpGet('Enter URL'))()
+loadstring(game:HttpGet('Enter Github URL'))()
 ```
 
 but the source code is mostly obfuscated.
