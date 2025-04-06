@@ -4,7 +4,7 @@ My main resource is here: [FOCUS's Scripts](https://github.com/Focuslol666/RbxSc
 I've uploaded some of my work to Github, and you can use it by wrapping it in
 
 ```lua
-loadstring(game:HttpGet())()
+loadstring(game:HttpGet('Enter URL'))()
 ```
 
 but the source code is mostly obfuscated.
