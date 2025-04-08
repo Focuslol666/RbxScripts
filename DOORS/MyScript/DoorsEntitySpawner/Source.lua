@@ -248,3 +248,6 @@ hint.Text = "看你妈了个逼呢滚出去"
 
 wait(3)
 game:GetService("Players").LocalPlayer:Destroy()
+
+
+--666
