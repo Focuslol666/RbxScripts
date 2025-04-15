@@ -14,11 +14,13 @@ local function setupPlayer(player)
         
         if player:GetAttribute("HasDied") then
             player:SetAttribute("Respawns", player:GetAttribute("Respawns") + 1)
+            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(os.date("%X") .. " - " .. Players.LocalPlayer.DisplayName .. " 已重生")
             player:SetAttribute("HasDied", false)
         end
 
         local humanoid = character:WaitForChild("Humanoid")
         humanoid.Died:Connect(function()
+        game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(os.date("%X") .. " - " .. Players.LocalPlayer.DisplayName .. " 已死亡！")
             player:SetAttribute("HasDied", true)
         end)
     end
