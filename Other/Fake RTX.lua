@@ -1,11 +1,4 @@
--- The raw file is not mine, I just uploaded it to Github. Raw file is below.
-
--- RTX OMG
-
--- script model: https://bit.ly/3uAMBCg
-
--- raw: https://bit.ly/3B6KOYa (Original Creator's Raw)
-
+-- RTXXXXXXXXXX OMG
 local Vignette = true -- change to false if you don't want a shadow frame
 
 local Lighting = game:GetService("Lighting")
