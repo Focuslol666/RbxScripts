@@ -15,7 +15,7 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 local entity = spawner.Create({
     Entity = {
         Name = "China_ASH500",
-        Asset = "https://github.com/Focuslol666/RbxScripts/blob/326943f654374cfe532f975c8abcf7344b606667/DOORS/MyScript/Other/ASH_Uranium235(Entity-001).rbxm?raw=true", -- 输入模型id
+        Asset = "https://github.com/Focuslol666/RbxScripts/blob/0bd6aa863fcbbc61734f8a3f9a50f768c37335b9/DOORS/MyScript/Other/ash.rbxm?raw=true", -- 输入模型id
         HeightOffset = 1 -- 高度偏离
     },
     Lights = { -- 调节灯光效果
@@ -68,6 +68,8 @@ local entity = spawner.Create({
 
 entity:SetCallback("OnSpawned", function()
     print("Entity has spawned")
+    local caption = game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Caption
+    caption.TextColor3 = Color3.fromRGB(132, 126, 132)
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."!", true)
     wait(3)
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.", true)
@@ -93,7 +95,7 @@ entity:SetCallback("OnStartMoving", function()
         entity:SetCallback("OnDespawning", function()
             loopController:Stop()
             print("Entity is despawning")
-            if game:GetService("Players").LocalPlayer.Character.Humanoid.Health >= 1 then
+            if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
                 require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.", true)                
                 wait(3)
                 require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: I hope you can stand up when I meet you next time.", true)
@@ -106,10 +108,13 @@ entity:SetCallback("OnStartMoving", function()
                     Reason = "Encounter and Survive rare entity called ASH_Uranium235.",
                     Image = GitPNG("https://github.com/Focuslol666/RbxScripts/blob/00aad5b4efb6bee04b8199b08b25d90e88efa76d/DOORS/MyScript/Other/SurviveASH500.png?raw=true","Survive_ASH500"),
                 })
+                caption.TextColor3 = Color3.fromRGB(255, 222, 189)
             else
                 require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings.", true)
                 wait(3)
                 require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created disasters, but they can't avoid them at all.", true)
+                wait(1)
+                caption.TextColor3 = Color3.fromRGB(255, 222, 189)
             end
         end)
     end
@@ -169,6 +174,6 @@ end)
 
 ]]--
 
----====== Run entity 冲撞类实体 ======---
+---====== Run entity 运行实体 ======---
 
 entity:Run()
