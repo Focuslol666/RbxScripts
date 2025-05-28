@@ -5,7 +5,13 @@ function GitPNG(GithubImg,ImageName)
 	end
 	return (getcustomasset or getsynasset)(ImageName..".png")
 end
-
+function GitSND(GithubSnd,SoundName)
+    local url=GithubSnd
+    if not isfile(SoundName..".mp3") then
+	    writefile(SoundName..".mp3", game:HttpGet(url))
+	end
+	return (getcustomasset or getsynasset)(SoundName..".mp3")
+end
 ---====== Load spawner 加载生成器 ======---
 
 local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua"))()
@@ -65,58 +71,60 @@ local entity = spawner.Create({
 })
 
 ---====== Debug entity 实体调试 ======---
+local loopController = nil
+local caption = nil
 
 entity:SetCallback("OnSpawned", function()
     print("Entity has spawned")
-    local caption = game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Caption
+    caption = game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Caption
     caption.TextColor3 = Color3.fromRGB(132, 126, 132)
-    require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."!", true)
-    wait(3)
-    require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.", true)
+    require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."!")
+    task.wait(3)
+    require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.")
 end)
 
 entity:SetCallback("OnStartMoving", function()
     print("Entity has started moving")
-    if not game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.HideVignette.Visible == true then
-        local loopController = {
-            Active = true,
-            Stop = function(self)
-                self.Active = false
-            end
-        }        
-        coroutine.wrap(function() 
-            while loopController.Active do
-                local sctm = math.random(1, 1.25) 
-                wait(sctm)
+    loopController = {
+        Active = true,
+        Stop = function(self)
+            self.Active = false
+        end
+    }        
+    coroutine.wrap(function() 
+        while loopController.Active do
+            if not game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.HideVignette.Visible then
                 game:GetService("Players").LocalPlayer.Character.Humanoid.Health -= 5
             end
-        end)()
-        
-        entity:SetCallback("OnDespawning", function()
-            loopController:Stop()
-            print("Entity is despawning")
-            if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
-                require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.", true)                
-                wait(3)
-                require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: I hope you can stand up when I meet you next time.", true)
-                wait(1)
-            ---====== Achievement Giver 给予成就 ======---
-                local achievementGiver = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Custom%20Achievements/Source.lua"))()
-                achievementGiver({
-                    Title = "Evil Radiation",
-                    Desc = "Enduring the pain caused by Radiation.",
-                    Reason = "Encounter and Survive rare entity called ASH_Uranium235.",
-                    Image = GitPNG("https://github.com/Focuslol666/RbxScripts/blob/00aad5b4efb6bee04b8199b08b25d90e88efa76d/DOORS/MyScript/Other/SurviveASH500.png?raw=true","Survive_ASH500"),
-                })
-                caption.TextColor3 = Color3.fromRGB(255, 222, 189)
-            else
-                require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings.", true)
-                wait(3)
-                require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created disasters, but they can't avoid them at all.", true)
-                wait(1)
-                caption.TextColor3 = Color3.fromRGB(255, 222, 189)
-            end
-        end)
+            task.wait(1)
+        end
+    end)()
+end)        
+entity:SetCallback("OnDespawning", function()
+    if loopController then
+        loopController:Stop()
+    end
+    print("Entity is despawning")
+    if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")                
+        task.wait(3)
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: I hope you can stand up when I meet you next time.")
+        task.wait(1)
+---====== Achievement Giver 给予成就 ======---
+        local achievementGiver = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Custom%20Achievements/Source.lua"))()
+            achievementGiver({
+                Title = "Evil Radiation",
+                Desc = "Enduring the pain caused by Radiation.",
+                Reason = "Encounter and Survive rare entity called ASH_Uranium235.",
+                Image = GitPNG("https://github.com/Focuslol666/RbxScripts/blob/00aad5b4efb6bee04b8199b08b25d90e88efa76d/DOORS/MyScript/Other/SurviveASH500.png?raw=true","Survive_ASH500"),
+            })
+        caption.TextColor3 = Color3.fromRGB(255, 222, 189)
+    else
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings.")
+        task.wait(3)
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created disasters, but they can't avoid them at all.")
+        task.wait(1)
+        caption.TextColor3 = Color3.fromRGB(255, 222, 189)
     end
 end)
 
@@ -151,6 +159,47 @@ end)
 entity:SetCallback("OnDamagePlayer", function(newHealth)
     if newHealth == 0 then
         print("Entity has killed the player")
+        local JumpscareGui = Instance.new("ScreenGui")
+        local Background = Instance.new("Frame")
+        local Face = Instance.new("ImageLabel")
+        JumpscareGui.Name = "JumpscareGui"
+        JumpscareGui.IgnoreGuiInset = true
+        JumpscareGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        JumpscareGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+        Background.Name = "Background"
+        Background.BackgroundColor3 = Color3.fromRGB(77, 5, 99)
+        Background.BorderSizePixel = 0
+        Background.Size = UDim2.new(1, 0, 1, 0)
+        Background.ZIndex = 999
+        Face.Name = "ASH500_ScareFace"
+        Face.AnchorPoint = Vector2.new(0.5, 0.5)
+        Face.BackgroundTransparency = 1
+        Face.Position = UDim2.new(0.5, 0, 0.5, 0)
+        Face.ResampleMode = Enum.ResamplerMode.Pixelated
+        Face.Size = UDim2.new(0, 150, 0, 150)
+        Face.Image = GitPNG("?raw=true", "ASH500_ScareImg")
+        Background.Parent = JumpscareGui
+        Face.Parent = Background
+        local scare = Instance.new("Sound")
+        scare.Parent = JumpscareGui
+        scare.Name = "Scare"
+        scare.SoundId = GitSND("?raw=true", "ASH500_ScareSnd")
+        scare.Volume = 6
+        local distort = Instance.new("DistortionSoundEffect")
+        distort.Parent = scare
+        distort.Level = 0.75   
+            task.spawn(function()
+                while JumpscareGui.Parent do
+                    Background.BackgroundColor3 = Color3.fromRGB(77, 5, 99)
+                    task.wait(math.random(25, 100) / 1000)
+                    Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    task.wait(math.random(25, 100) / 1000)
+        end
+    end)
+        game.TweenService:Create(Face, TweenInfo.new(0.7), {Size = UDim2.new(0, 2450, 0, 1550), ImageTransparency = 0}):Play()
+        scare:Play()
+        task.wait(0.8)
+        JumpscareGui:Destroy()
     else
         print("Entity has damaged the player")
     end
