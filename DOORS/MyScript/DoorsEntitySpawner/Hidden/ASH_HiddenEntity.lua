@@ -20,8 +20,8 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 
 local entity = spawner.Create({
     Entity = {
-        Name = "China_ASH500",
-        Asset = "https://github.com/Focuslol666/RbxScripts/blob/0bd6aa863fcbbc61734f8a3f9a50f768c37335b9/DOORS/MyScript/Other/ash.rbxm?raw=true", -- 输入模型id
+        Name = "ASH500",
+        Asset = "https://github.com/Focuslol666/RbxScripts/blob/5cba5419a26119554a62161fbc666e124819c65d/DOORS/MyScript/Other/ASH500.rbxm?raw=true", -- 输入模型id
         HeightOffset = 1 -- 高度偏离
     },
     Lights = { -- 调节灯光效果
@@ -41,8 +41,8 @@ local entity = spawner.Create({
         Values = {1.5, 20, 0.1, 1} -- 量级, 粗糙度, 淡入, 淡出 (按照顺序填入数字)
     },
     Movement = { -- 移动
-        Speed = 235, -- 移动速度
-        Delay = 2, -- 移动延迟
+        Speed = 75, -- 移动速度
+        Delay = 1, -- 移动延迟
         Reversed = false -- 是(true)否(false)调为相反移动
     },
     Rebounding = { -- 来回移动
@@ -55,17 +55,17 @@ local entity = spawner.Create({
     Damage = { -- 伤害
         Enabled = true, -- 是(true)否(false)对玩家造成伤害
         Range = 40, -- 伤害范围
-        Amount = 200 -- 伤害数额
+        Amount = 23500 -- 伤害数额
     },
     Crucifixion = { -- 十字架封印效果
-        Enabled = true, -- 是(true)否(false)能对其使用十字架
+        Enabled = false, -- 是(true)否(false)能对其使用十字架
         Range = 40, -- 封印范围
         Resist = true, -- 是(true)否(false)只能被控制
         Break = false -- 是(true)否(false)可以被封印
     },
     Death = {
         Type = "Guiding", -- 可切换为"Curious"
-        Hints = {"你死于...##############?", "我发誓你永远不想知道那是什么东西", "尽快躲藏，不要逃跑", "千万不要试图了解它", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="}, -- 可以添加、删除和更改字幕
+        Hints = {"你死于...##############?!", "我发誓你永远不想知道那是什么东西", "尽快躲藏，不要逃跑", "千万不要试图了解它", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="}, -- 可以添加、删除和更改字幕
         Cause = "ASH_Uranium235" -- 总览中的死因
     }
 })
@@ -73,6 +73,48 @@ local entity = spawner.Create({
 ---====== Debug entity 实体调试 ======---
 local loopController = nil
 local caption = nil
+local trackingDistance = 100
+local collisionDistance = 40
+local originalPath = nil
+local isTracking = false
+local hasCollided = false
+local trackingLoop = nil
+
+local function trackPlayer()
+    while isTracking and entity.Model and entity.Model.PrimaryPart do
+        local player = game.Players.LocalPlayer
+        if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local playerPosition = player.Character.HumanoidRootPart.Position
+            local entityPosition = entity.Model.PrimaryPart.Position
+            
+            local distance = (playerPosition - entityPosition).Magnitude
+            
+            if distance <= trackingDistance and not hasCollided then
+                local lookPosition = Vector3.new(playerPosition.X, entityPosition.Y, playerPosition.Z)
+                entity.Model:SetPrimaryPartCFrame(CFrame.new(entityPosition, lookPosition))
+                
+                if distance <= collisionDistance then
+                    hasCollided = true
+                    
+                    originalPath = entityPosition
+                    
+                    task.wait(0.5)
+                end
+            end
+            
+            if hasCollided and originalPath then
+                local direction = (originalPath - entityPosition).Unit
+                entity.Model:SetPrimaryPartCFrame(CFrame.new(entityPosition, entityPosition + direction))
+                
+                if (originalPath - entityPosition).Magnitude < 5 then
+                    hasCollided = false
+                    originalPath = nil
+                end
+            end
+        end
+        task.wait(0.1)
+    end
+end
 
 entity:SetCallback("OnSpawned", function()
     print("Entity has spawned")
@@ -89,8 +131,14 @@ entity:SetCallback("OnStartMoving", function()
         Active = true,
         Stop = function(self)
             self.Active = false
+            isTracking = false
+            if trackingLoop then
+                trackingLoop:Disconnect()
+                trackingLoop = nil
+            end
         end
     }        
+    
     coroutine.wrap(function() 
         while loopController.Active do
             if not game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.HideVignette.Visible then
@@ -99,10 +147,17 @@ entity:SetCallback("OnStartMoving", function()
             task.wait(1)
         end
     end)()
+    
+    isTracking = true
+    coroutine.wrap(trackPlayer)()
 end)        
+
 entity:SetCallback("OnDespawning", function()
     if loopController then
         loopController:Stop()
+        isTracking = false
+        hasCollided = false
+        originalPath = nil
     end
     print("Entity is despawning")
     if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
@@ -182,7 +237,7 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
         Face.Parent = Background
         local scare = Instance.new("Sound")
         scare.Parent = JumpscareGui
-        scare.Name = "Scare"
+        scare.Name = "ASH500_ScareSound"
         scare.SoundId = GitSND("?raw=true", "ASH500_ScareSnd")
         scare.Volume = 6
         local distort = Instance.new("DistortionSoundEffect")
@@ -204,24 +259,6 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
         print("Entity has damaged the player")
     end
 end)
-
---[[
-
-DEVELOPER NOTE:
-By overwriting 'CrucifixionOverwrite' the default crucifixion callback will be replaced with your custom callback.
-
-entity:SetCallback("CrucifixionOverwrite", function()
-    print("Custom crucifixion callback")
-end)
-
-[翻译] 开发者笔记：
-通过覆盖‘CrucifixionOverwrite’，默认的 crucifixion 回调将被你的自定义回调替换
-
-entity:SetCallback("CrucifixionOverwrite", function()
-    print("Custom crucifixion callback")
-end)
-
-]]--
 
 ---====== Run entity 运行实体 ======---
 
