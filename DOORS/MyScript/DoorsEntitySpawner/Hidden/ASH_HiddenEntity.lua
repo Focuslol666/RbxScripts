@@ -59,7 +59,7 @@ local entity = spawner.Create({
     },
     Crucifixion = { -- 十字架封印效果
         Enabled = false, -- 是(true)否(false)能对其使用十字架
-        Range = 0, -- 封印范围
+        Range = 1, -- 封印范围
         Resist = true, -- 是(true)否(false)只能被控制
         Break = false -- 是(true)否(false)可以被封印
     },
