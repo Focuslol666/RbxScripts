@@ -21,7 +21,7 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 local entity = spawner.Create({
     Entity = {
         Name = "ASH500",
-        Asset = "https://github.com/Focuslol666/RbxScripts/blob/5cba5419a26119554a62161fbc666e124819c65d/DOORS/MyScript/Other/ASH500.rbxm?raw=true", -- 输入模型id
+        Asset = "https://github.com/Focuslol666/RbxScripts/blob/b25c256c010db7cb5936c57c7c7e7ec20b7557ed/DOORS/MyScript/Other/ASH500.rbxm?raw=true", -- 输入模型id
         HeightOffset = 1 -- 高度偏离
     },
     Lights = { -- 调节灯光效果
@@ -59,13 +59,13 @@ local entity = spawner.Create({
     },
     Crucifixion = { -- 十字架封印效果
         Enabled = false, -- 是(true)否(false)能对其使用十字架
-        Range = 40, -- 封印范围
+        Range = 0, -- 封印范围
         Resist = true, -- 是(true)否(false)只能被控制
         Break = false -- 是(true)否(false)可以被封印
     },
     Death = {
         Type = "Guiding", -- 可切换为"Curious"
-        Hints = {"你死于...##############?!", "我发誓你永远不想知道那是什么东西", "尽快躲藏，不要逃跑", "千万不要试图了解它", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="}, -- 可以添加、删除和更改字幕
+        Hints = {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="}, -- 可以添加、删除和更改字幕
         Cause = "ASH_Uranium235" -- 总览中的死因
     }
 })
@@ -73,54 +73,12 @@ local entity = spawner.Create({
 ---====== Debug entity 实体调试 ======---
 local loopController = nil
 local caption = nil
-local trackingDistance = 100
-local collisionDistance = 40
-local originalPath = nil
-local isTracking = false
-local hasCollided = false
-local trackingLoop = nil
-
-local function trackPlayer()
-    while isTracking and entity.Model and entity.Model.PrimaryPart do
-        local player = game.Players.LocalPlayer
-        if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            local playerPosition = player.Character.HumanoidRootPart.Position
-            local entityPosition = entity.Model.PrimaryPart.Position
-            
-            local distance = (playerPosition - entityPosition).Magnitude
-            
-            if distance <= trackingDistance and not hasCollided then
-                local lookPosition = Vector3.new(playerPosition.X, entityPosition.Y, playerPosition.Z)
-                entity.Model:SetPrimaryPartCFrame(CFrame.new(entityPosition, lookPosition))
-                
-                if distance <= collisionDistance then
-                    hasCollided = true
-                    
-                    originalPath = entityPosition
-                    
-                    task.wait(0.5)
-                end
-            end
-            
-            if hasCollided and originalPath then
-                local direction = (originalPath - entityPosition).Unit
-                entity.Model:SetPrimaryPartCFrame(CFrame.new(entityPosition, entityPosition + direction))
-                
-                if (originalPath - entityPosition).Magnitude < 5 then
-                    hasCollided = false
-                    originalPath = nil
-                end
-            end
-        end
-        task.wait(0.1)
-    end
-end
 
 entity:SetCallback("OnSpawned", function()
     print("Entity has spawned")
     caption = game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Caption
     caption.TextColor3 = Color3.fromRGB(132, 126, 132)
-    require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."!")
+    require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."! =)")
     task.wait(3)
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.")
 end)
@@ -131,15 +89,13 @@ entity:SetCallback("OnStartMoving", function()
         Active = true,
         Stop = function(self)
             self.Active = false
-            isTracking = false
-            if trackingLoop then
-                trackingLoop:Disconnect()
-                trackingLoop = nil
-            end
         end
     }        
-    
-    coroutine.wrap(function() 
+    coroutine.wrap(function()
+        if game:GetService("Players").LocalPlayer.Character.Humanoid.Health == 0 then
+            firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
+            game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
+        end
         while loopController.Active do
             if not game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.HideVignette.Visible then
                 game:GetService("Players").LocalPlayer.Character.Humanoid.Health -= 5
@@ -147,17 +103,10 @@ entity:SetCallback("OnStartMoving", function()
             task.wait(1)
         end
     end)()
-    
-    isTracking = true
-    coroutine.wrap(trackPlayer)()
 end)        
-
 entity:SetCallback("OnDespawning", function()
     if loopController then
         loopController:Stop()
-        isTracking = false
-        hasCollided = false
-        originalPath = nil
     end
     print("Entity is despawning")
     if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
