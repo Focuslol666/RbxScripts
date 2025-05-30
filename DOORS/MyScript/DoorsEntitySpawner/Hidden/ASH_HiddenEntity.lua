@@ -78,6 +78,8 @@ entity:SetCallback("OnSpawned", function()
     print("Entity has spawned")
     caption = game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Caption
     caption.TextColor3 = Color3.fromRGB(132, 126, 132)
+    caption.Font = Enum.Font.Custom
+    caption.FontId = "rbxassetid://12187364842"
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."! =)")
     task.wait(3)
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.")
@@ -123,12 +125,14 @@ entity:SetCallback("OnDespawning", function()
                 Image = GitPNG("https://github.com/Focuslol666/RbxScripts/blob/00aad5b4efb6bee04b8199b08b25d90e88efa76d/DOORS/MyScript/Other/SurviveASH500.png?raw=true","Survive_ASH500"),
             })
         caption.TextColor3 = Color3.fromRGB(255, 222, 189)
+        caption.Font = Enum.Font.Oswald
     else
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings.")
         task.wait(3)
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created disasters, but they can't avoid them at all.")
         task.wait(1)
         caption.TextColor3 = Color3.fromRGB(255, 222, 189)
+        caption.Font = Enum.Font.Oswald
     end
 end)
 
