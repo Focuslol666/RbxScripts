@@ -101,7 +101,7 @@ entity:SetCallback("OnStartMoving", function()
                     game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
                 end
             end
-            task.wait(1.5)
+            task.wait(0.85)
         end
     end)()
 end)
