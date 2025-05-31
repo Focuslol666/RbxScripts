@@ -21,7 +21,7 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 local entity = spawner.Create({
     Entity = {
         Name = "ASH500",
-        Asset = "https://github.com/Focuslol666/RbxScripts/blob/b25c256c010db7cb5936c57c7c7e7ec20b7557ed/DOORS/MyScript/Other/ASH500.rbxm?raw=true", -- 输入模型id
+        Asset = "https://github.com/Focuslol666/RbxScripts/blob/fae767e0500693db66d8dda8d06316048a1c3274/DOORS/MyScript/Other/ASH500.rbxm?raw=true", -- 输入模型id
         HeightOffset = 1 -- 高度偏离
     },
     Lights = { -- 调节灯光效果
@@ -48,8 +48,8 @@ local entity = spawner.Create({
     Rebounding = { -- 来回移动
         Enabled = true, -- 是(true)否(false)来回移动
         Type = "Ambush", -- 可切换为"Blitz"
-        Min = 5, -- 最少来回次数
-        Max = 10, -- 最多来回次数
+        Min = 3, -- 最少来回次数
+        Max = 5, -- 最多来回次数
         Delay = 1 --来回延迟
     },
     Damage = { -- 伤害
@@ -78,8 +78,7 @@ entity:SetCallback("OnSpawned", function()
     print("Entity has spawned")
     caption = game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Caption
     caption.TextColor3 = Color3.fromRGB(132, 126, 132)
-    caption.Font = Enum.Font.Custom
-    caption.FontId = "rbxassetid://12187364842"
+    caption.FontFace = Font.new("rbxassetid://12187364842")
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."! =)")
     task.wait(3)
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.")
@@ -92,20 +91,20 @@ entity:SetCallback("OnStartMoving", function()
         Stop = function(self)
             self.Active = false
         end
-    }        
+    }
     coroutine.wrap(function()
-        if game:GetService("Players").LocalPlayer.Character.Humanoid.Health == 0 then
-            firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
-            game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
-        end
         while loopController.Active do
             if not game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.HideVignette.Visible then
-                game:GetService("Players").LocalPlayer.Character.Humanoid.Health -= 5
+                game:GetService("Players").LocalPlayer.Character.Humanoid:TakeDamage(5)
+                if game:GetService("Players").LocalPlayer.Character.Humanoid.Health == 0 then
+                    firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
+                    game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
+                end
             end
-            task.wait(1)
+            task.wait(1.5)
         end
     end)()
-end)        
+end)
 entity:SetCallback("OnDespawning", function()
     if loopController then
         loopController:Stop()
@@ -118,12 +117,12 @@ entity:SetCallback("OnDespawning", function()
         task.wait(1)
 ---====== Achievement Giver 给予成就 ======---
         local achievementGiver = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Custom%20Achievements/Source.lua"))()
-            achievementGiver({
-                Title = "Evil Radiation",
-                Desc = "Enduring the pain caused by Radiation.",
-                Reason = "Encounter and Survive rare entity called ASH_Uranium235.",
-                Image = GitPNG("https://github.com/Focuslol666/RbxScripts/blob/00aad5b4efb6bee04b8199b08b25d90e88efa76d/DOORS/MyScript/Other/SurviveASH500.png?raw=true","Survive_ASH500"),
-            })
+        achievementGiver({
+            Title = "Evil Radiation",
+            Desc = "Enduring the pain caused by Radiation.",
+            Reason = "Encounter and Survive rare entity called ASH_Uranium235.",
+            Image = GitPNG("https://github.com/Focuslol666/RbxScripts/blob/00aad5b4efb6bee04b8199b08b25d90e88efa76d/DOORS/MyScript/Other/SurviveASH500.png?raw=true","Survive_ASH500"),
+        })
         caption.TextColor3 = Color3.fromRGB(255, 222, 189)
         caption.Font = Enum.Font.Oswald
     else
@@ -167,6 +166,7 @@ end)
 entity:SetCallback("OnDamagePlayer", function(newHealth)
     if newHealth == 0 then
         print("Entity has killed the player")
+        --[[
         local JumpscareGui = Instance.new("ScreenGui")
         local Background = Instance.new("Frame")
         local Face = Instance.new("ImageLabel")
@@ -208,6 +208,7 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
         scare:Play()
         task.wait(0.8)
         JumpscareGui:Destroy()
+        ]]
     else
         print("Entity has damaged the player")
     end
