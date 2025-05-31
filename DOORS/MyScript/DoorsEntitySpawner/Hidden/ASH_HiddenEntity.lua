@@ -21,7 +21,7 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 local entity = spawner.Create({
     Entity = {
         Name = "ASH500",
-        Asset = "https://github.com/Focuslol666/RbxScripts/blob/2685ffbc6b8c29896d86a07578b82816e12f5602/DOORS/MyScript/Other/ASH500.rbxm?raw=true", -- 输入模型id
+        Asset = "https://github.com/Focuslol666/RbxScripts/blob/b14f2cd9561a07d543331bb021b762291014f796/DOORS/MyScript/Other/ASH500.rbxm?raw=true", -- 输入模型id
         HeightOffset = 1 -- 高度偏离
     },
     Lights = { -- 调节灯光效果
@@ -72,9 +72,9 @@ local entity = spawner.Create({
 
 ---====== Debug entity 实体调试 ======---
 local function SpotlightRotation(speed)
-    local part1 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld.Part
-    local part2 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld:GetChildren()[2]
-    local part3 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld:GetChildren()[3]
+    local part1 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld["Part(Light-A)"]
+    local part2 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld["Part(Light-B)"]
+    local part3 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld["Part(Light-C)"]
     local rotationSpeed = speed or 1
     local RunService = game:GetService("RunService")
     local connection
