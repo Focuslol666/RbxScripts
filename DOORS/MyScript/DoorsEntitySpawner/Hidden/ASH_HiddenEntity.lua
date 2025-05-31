@@ -180,6 +180,7 @@ end)
 entity:SetCallback("OnLookAt", function(lineOfSight)
     if lineOfSight == true then
         print("Player is looking at entity")
+        --[[
         local Players = game:GetService("Players")
         local RunService = game:GetService("RunService")
         local player = Players.LocalPlayer
@@ -200,9 +201,10 @@ entity:SetCallback("OnLookAt", function(lineOfSight)
         background.ScaleType = Enum.ScaleType.Crop
         background.Parent = screenGui
         screenGui.Parent = playerGui
+        ]]
     else
         print("Player view is obstructed by something")
-        screenGui.Enabled = false
+        -- screenGui.Enabled = false
     end
 end)
 
