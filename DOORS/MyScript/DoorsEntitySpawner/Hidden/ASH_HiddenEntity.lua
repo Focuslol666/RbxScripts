@@ -85,32 +85,8 @@ local function SpotlightRotation(speed)
     end)
 end
 
-local localPlayer = game.Players.LocalPlayer
-local damageLoop = {
-    Active = false,
-    Stop = function(self)
-        self.Active = false
-    end
-}
-local function ApplyRadiationDamage()
-    if not localPlayer.Character then return end
-    
-    local humanoid = localPlayer.Character:FindFirstChild("Humanoid")
-    if not humanoid or humanoid.Health <= 0 then return end
-    
-    humanoid:TakeDamage(5)
-    
-    if humanoid.Health <= 0 then
-        damageLoop:Stop()
-        
-        firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
-        end
-        local stats = game.ReplicatedStorage.GameStats:FindFirstChild("Player_".. localPlayer.Name)
-        if stats and stats.Total.DeathCause then
-            stats.Total.DeathCause.Value = "ASH_Uranium235"
-        end
-    end
-end
+local loopController = nil
+local caption = nil
 
 entity:SetCallback("OnSpawned", function()
     print("Entity has spawned")
@@ -127,10 +103,24 @@ end)
 entity:SetCallback("OnStartMoving", function()
     print("Entity has started moving")
     SpotlightRotation(60)
+    loopController = {
+        Active = true,
+        Stop = function(self)
+            self.Active = false
+        end
+    }
     coroutine.wrap(function()
-        while damageLoop.Active do
-            if not game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.HideVignette.Visible then
-                ApplyRadiationDamage()
+        while loopController.Active do
+            if game:GetService("Players").LocalPlayer.Character and not game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.HideVignette.Visible then
+                if not game.Players.LocalPlayer.Character then return end
+                local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+                if not humanoid or humanoid.Health <= 0 then return end
+                    game:GetService("Players").LocalPlayer.Character.Humanoid:TakeDamage(5)
+                if game:GetService("Players").LocalPlayer.Character.Humanoid.Health <= 0 then
+                    loopController:Stop()
+                    game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
+                    firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
+                end
             end
             task.wait(0.85)
         end
@@ -144,8 +134,11 @@ entity:SetCallback("OnStartMoving", function()
 end)
 entity:SetCallback("OnDespawning", function()
     print("Entity is despawning")
+    if connection then
+        connection:Disconnect()
+    end
     workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = false
-    damageLoop:Stop()
+    loopController:Stop()
     if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")
         task.wait(3)
