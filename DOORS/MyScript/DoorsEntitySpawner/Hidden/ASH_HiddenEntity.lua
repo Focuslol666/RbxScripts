@@ -21,7 +21,7 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 local entity = spawner.Create({
     Entity = {
         Name = "ASH500",
-        Asset = "https://github.com/Focuslol666/RbxScripts/blob/fae767e0500693db66d8dda8d06316048a1c3274/DOORS/MyScript/Other/ASH500.rbxm?raw=true", -- 输入模型id
+        Asset = "https://github.com/Focuslol666/RbxScripts/blob/2685ffbc6b8c29896d86a07578b82816e12f5602/DOORS/MyScript/Other/ASH500.rbxm?raw=true", -- 输入模型id
         HeightOffset = 1 -- 高度偏离
     },
     Lights = { -- 调节灯光效果
@@ -38,7 +38,7 @@ local entity = spawner.Create({
     CameraShake = { -- 视角摇晃
         Enabled = true, --是(true)否(false)会导致视角摇晃
         Range = 100, -- 范围
-        Values = {1.5, 20, 0.1, 1} -- 量级, 粗糙度, 淡入, 淡出 (按照顺序填入数字)
+        Values = {10, 10, 0.1, 1} -- 量级, 粗糙度, 淡入, 淡出 (按照顺序填入数字)
     },
     Movement = { -- 移动
         Speed = 75, -- 移动速度
@@ -71,14 +71,30 @@ local entity = spawner.Create({
 })
 
 ---====== Debug entity 实体调试 ======---
+local function SpotlightRotation(speed)
+    local part1 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld.Part
+    local part2 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld:GetChildren()[2]
+    local part3 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld:GetChildren()[3]
+    local rotationSpeed = speed or 1
+    local RunService = game:GetService("RunService")
+    local connection
+    connection = RunService.Heartbeat:Connect(function(deltaTime)
+        part1.Orientation += Vector3.new(0, rotationSpeed * deltaTime, 0)
+        part2.Orientation += Vector3.new(0, rotationSpeed * deltaTime, 0)
+        part3.Orientation += Vector3.new(0, rotationSpeed * deltaTime, 0)
+    end)
+end
+
 local loopController = nil
 local caption = nil
 
 entity:SetCallback("OnSpawned", function()
     print("Entity has spawned")
     caption = game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Caption
+    OGColor = caption.TextColor3
+    OGFont = caption.Font
     caption.TextColor3 = Color3.fromRGB(132, 126, 132)
-    caption.FontFace = Font.new("rbxassetid://12187364842")
+    caption.Font = Enum.Font.Kalam
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."! =)")
     task.wait(3)
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.")
@@ -86,6 +102,7 @@ end)
 
 entity:SetCallback("OnStartMoving", function()
     print("Entity has started moving")
+    SpotlightRotation(60)
     loopController = {
         Active = true,
         Stop = function(self)
@@ -97,41 +114,58 @@ entity:SetCallback("OnStartMoving", function()
             if not game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.HideVignette.Visible then
                 game:GetService("Players").LocalPlayer.Character.Humanoid:TakeDamage(5)
                 if game:GetService("Players").LocalPlayer.Character.Humanoid.Health == 0 then
-                    firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
                     game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
+                    firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
                 end
             end
             task.wait(0.85)
         end
+        while workspace.ASH500 do
+            workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = false
+            local twrn = math.random(5,10)
+            task.wait(twrn)
+            workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = true
+        end
     end)()
 end)
 entity:SetCallback("OnDespawning", function()
+    print("Entity is despawning")
+    workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = false
     if loopController then
         loopController:Stop()
     end
-    print("Entity is despawning")
     if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")                
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")
         task.wait(3)
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: I hope you can stand up when I meet you next time.")
         task.wait(1)
 ---====== Achievement Giver 给予成就 ======---
-        local achievementGiver = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Custom%20Achievements/Source.lua"))()
-        achievementGiver({
-            Title = "Evil Radiation",
-            Desc = "Enduring the pain caused by Radiation.",
-            Reason = "Encounter and Survive rare entity called ASH_Uranium235.",
-            Image = GitPNG("https://github.com/Focuslol666/RbxScripts/blob/00aad5b4efb6bee04b8199b08b25d90e88efa76d/DOORS/MyScript/Other/SurviveASH500.png?raw=true","Survive_ASH500"),
-        })
-        caption.TextColor3 = Color3.fromRGB(255, 222, 189)
-        caption.Font = Enum.Font.Oswald
+        if not _G.achievementLock then
+            _G.achievementLock = {}
+        end
+        local achievementTitle = "Evil Radiation"
+        if not _G.achievementLock[achievementTitle] then
+            local achievementGiver = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Custom%20Achievements/Source.lua"))()   
+            achievementGiver({
+                Title = achievementTitle,
+                Desc = "Enduring the pain caused by Radiation.",
+                Reason = "Encounter and Survive rare entity called ASH_Uranium235.",
+                Image = GitPNG("https://github.com/Focuslol666/RbxScripts/blob/00aad5b4efb6bee04b8199b08b25d90e88efa76d/DOORS/MyScript/Other/SurviveASH500.png?raw=true","Survive_ASH500"), -- 输入成就图id
+            })    
+            _G.achievementLock[achievementTitle] = true
+            print(achievementTitle.." achievement unlocked and given!")
+        else
+            warn(achievementTitle.." achievement has been unlocked.")
+        end
+        caption.TextColor3 = OGColor
+        caption.Font = OGFont
     else
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings.")
         task.wait(3)
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created disasters, but they can't avoid them at all.")
         task.wait(1)
-        caption.TextColor3 = Color3.fromRGB(255, 222, 189)
-        caption.Font = Enum.Font.Oswald
+        caption.TextColor3 = OGColor
+        caption.Font = OGFont
     end
 end)
 
@@ -146,8 +180,29 @@ end)
 entity:SetCallback("OnLookAt", function(lineOfSight)
     if lineOfSight == true then
         print("Player is looking at entity")
+        local Players = game:GetService("Players")
+        local RunService = game:GetService("RunService")
+        local player = Players.LocalPlayer
+        local playerGui = player:WaitForChild("PlayerGui")
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "GlitchScreen"
+        screenGui.ResetOnSpawn = false
+        screenGui.IgnoreGuiInset = true
+        screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        screenGui.Enabled = true
+        local background = Instance.new("ImageLabel")
+        background.Name = "ImageLabel"
+        background.Size = UDim2.new(1, 0, 1, 0)
+        background.Position = UDim2.new(0, 0, 0, 0)
+        background.BackgroundTransparency = 0.5
+        background.BorderSizePixel = 0
+        background.Image = "rbxassetid://7218675830"
+        background.ScaleType = Enum.ScaleType.Crop
+        background.Parent = screenGui
+        screenGui.Parent = playerGui
     else
         print("Player view is obstructed by something")
+        screenGui.Enabled = false
     end
 end)
 
