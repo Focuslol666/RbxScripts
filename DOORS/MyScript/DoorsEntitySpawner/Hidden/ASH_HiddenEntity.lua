@@ -115,14 +115,14 @@ entity:SetCallback("OnStartMoving", function()
                 if not game.Players.LocalPlayer.Character then return end
                 local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
                 if not humanoid or humanoid.Health <= 0 then return end
-                    game:GetService("Players").LocalPlayer.Character.Humanoid:TakeDamage(5)
+                    game:GetService("Players").LocalPlayer.Character.Humanoid:TakeDamage(1)
                 if game:GetService("Players").LocalPlayer.Character.Humanoid.Health <= 0 then
                     loopController:Stop()
                     game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
                     firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
                 end
             end
-            task.wait(0.85)
+            task.wait(0.17)
         end
         while workspace.ASH500 do
             workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = false
