@@ -25,7 +25,6 @@ local function Godmode(Value)
         if invincibilityIcon then
             invincibilityIcon.Visible = true
         end
-        require(player.PlayerGui.MainUI.Initiator.Main_Game).caption("Godmode is enabled.")
         print("Godmode is enabled.")
     else
         humanoid.MaxHealth = originalMaxHealth
@@ -33,7 +32,6 @@ local function Godmode(Value)
         if invincibilityIcon then
             invincibilityIcon.Visible = false
         end
-        require(player.PlayerGui.MainUI.Initiator.Main_Game).caption("Godmode is disabled.")
         print("Godmode is disabled.")
     end
 end
