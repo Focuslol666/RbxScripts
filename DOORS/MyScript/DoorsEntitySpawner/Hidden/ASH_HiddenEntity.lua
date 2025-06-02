@@ -83,10 +83,14 @@ local function SpotlightRotation(speed)
         part2.Orientation += Vector3.new(0, rotationSpeed * deltaTime, 0)
         part3.Orientation += Vector3.new(0, rotationSpeed * deltaTime, 0)
     end)
+    print("The spotlight is turning")
 end
 
 local loopController = nil
 local caption = nil
+
+local canDamage = true
+local damageCooldown = 0.25
 
 entity:SetCallback("OnSpawned", function()
     print("Entity has spawned")
@@ -102,7 +106,6 @@ end)
 
 entity:SetCallback("OnStartMoving", function()
     print("Entity has started moving")
-    SpotlightRotation(60)
     loopController = {
         Active = true,
         Stop = function(self)
@@ -124,12 +127,6 @@ entity:SetCallback("OnStartMoving", function()
             end
             task.wait(0.17)
         end
-        while workspace.ASH500 do
-            workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = false
-            local twrn = math.random(5,10)
-            task.wait(twrn)
-            workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = true
-        end
     end)()
 end)
 entity:SetCallback("OnDespawning", function()
@@ -138,7 +135,9 @@ entity:SetCallback("OnDespawning", function()
         connection:Disconnect()
     end
     workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = false
-    loopController:Stop()
+    if loopController then
+        loopController:Stop()
+    end
     if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")
         task.wait(3)
@@ -165,7 +164,7 @@ entity:SetCallback("OnDespawning", function()
         caption.TextColor3 = OGColor
         caption.Font = OGFont
     else
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings.")
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings...")
         task.wait(3)
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created disasters, but they can't avoid them at all.")
         task.wait(1)
@@ -185,6 +184,16 @@ end)
 entity:SetCallback("OnLookAt", function(lineOfSight)
     if lineOfSight == true then
         print("Player is looking at entity")
+        if canDamage then
+            canDamage = false
+            game:GetService("Players").LocalPlayer.Character.Humanoid:TakeDamage(5)
+            task.wait(damageCooldown)
+            canDamage = true
+        end
+        if game:GetService("Players").LocalPlayer.Character.Humanoid.Health <= 0 then
+            game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
+            firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
+        end
         --[[
         local Players = game:GetService("Players")
         local RunService = game:GetService("RunService")
