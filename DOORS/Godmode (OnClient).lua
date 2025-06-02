@@ -5,7 +5,7 @@
 If parameter is true, Godmode is enabled, and if false, Godmode is disabled.
 
 For Example:
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Focuslol666/RbxScripts/refs/heads/main/DOORS/Godmode%20(OnClient).lua"))()
+local Godmode = loadstring(game:HttpGet("https://raw.githubusercontent.com/Focuslol666/RbxScripts/refs/heads/main/DOORS/Godmode%20(OnClient).lua"))()
 Godmode(true) or Godmode(false)
 ]]
 
