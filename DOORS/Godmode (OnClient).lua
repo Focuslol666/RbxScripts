@@ -43,3 +43,5 @@ local function Godmode(Value)
         print("Godmode is disabled.")
     end
 end
+
+return Godmode
