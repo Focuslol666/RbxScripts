@@ -1,6 +1,11 @@
--- Stamina System for DOORS.
--- Made by FOCUS (@Focuslol666)
--- This script is Beta Version, and there may be some bugs.
+--[[
+Stamina System for DOORS.
+Made by FOCUS (@Focuslol666)
+This script is Beta Version, and there may be some bugs.
+
+PC: Press the 'Q' Key to Sprint.
+Mobile: Press the Button to Sprint
+]]
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
@@ -139,13 +144,14 @@ local function updateStaminaBar()
     -- 直接设置体力条大小
     bar.Size = UDim2.new(percent, 0, 1, 0)
     
-    -- 米黄色 (255,222,189) 到红色 (255,0,0) 的渐变
-    if percent >= RECOVER_THRESHOLD then
-        -- 75%以上保持米黄色
+    local COLOR_THRESHOLD = 0.5  -- 颜色渐变阈值为50%
+    
+    if percent >= COLOR_THRESHOLD then
+        -- 50%以上保持米黄色
         bar.BackgroundColor3 = Color3.fromRGB(255, 222, 189)
     else
-        -- 计算渐变比例 (0%到75%区间)
-        local t = 1 - (percent / RECOVER_THRESHOLD)
+        -- 计算渐变比例 (0%到50%区间)
+        local t = 1 - (percent / COLOR_THRESHOLD)
         
         -- 在米黄色和红色之间渐变
         local r = 255
