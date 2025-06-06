@@ -4,7 +4,7 @@ Made by FOCUS (@Focuslol666)
 This script is Beta Version, and there may be some bugs.
 
 PC: Press the 'Q' Key to Sprint.
-Mobile: Press the Button to Sprint
+Mobile: Press the Button to Sprint.
 ]]
 
 local Players = game:GetService("Players")
