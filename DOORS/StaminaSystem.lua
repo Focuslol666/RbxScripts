@@ -18,7 +18,7 @@ local Captions = {
     "Made by @FOCUSED_LIGHT.",
     "Press the 'Q' Key or the Button to Sprint.",
     "This script is Beta Version, and there may be some bugs.",
-    "Fuck @DY Film_A-101, Film_A-101's parents are dead."
+    "Fuck @screech_256, Ghost_Burger's parents are dead."
 }
 
 local MAX_STAMINA = 100
