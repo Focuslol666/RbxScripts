@@ -45,11 +45,12 @@ screenGui.Enabled = true -- You can select true or false to enable or disable St
 
 local background = Instance.new("Frame")
 background.Name = "Background"
+background.BackgroundTransparency = 0.2
 background.Size = UDim2.new(0.2, 0, 0.03, 0)
 background.Position = UDim2.new(0.75, 0, 0.9, 0)
-background.BackgroundColor3 = Color3.fromRGB(100, 70, 16)
+background.BackgroundColor3 = Color3.fromRGB(30, 17, 16)
 background.BorderSizePixel = 2
-background.BorderColor3 = Color3.fromRGB(63, 41, 35)
+background.BorderColor3 = Color3.fromRGB(50, 40, 30)
 background.Parent = screenGui
 
 local bar = Instance.new("Frame")
