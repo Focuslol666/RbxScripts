@@ -262,5 +262,5 @@ print("Stamina System executed successfully!")
 
 for _, Text in ipairs(Captions) do
     require(mainGame).caption(Text, true)
-    task.wait(3)
+    task.wait(2)
 end
