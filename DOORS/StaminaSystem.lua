@@ -13,6 +13,14 @@ local RunService = game:GetService("RunService")
 local GuiService = game:GetService("GuiService")
 local TweenService = game:GetService("TweenService")
 
+local Captions = {
+    "Stamina System executed successfully!",
+    "Made by @FOCUSED_LIGHT.",
+    "Press the 'Q' Key or the Button to Sprint.",
+    "This script is Beta Version, and there may be some bugs.",
+    "Fuck @DY Film_A-101, Film_A-101's parents are dead."
+}
+
 local MAX_STAMINA = 100
 local STAMINA_DRAIN_RATE = MAX_STAMINA / 7
 local STAMINA_RECOVER_RATE = MAX_STAMINA / 14
@@ -30,6 +38,7 @@ local baseWalkSpeed = humanoid.WalkSpeed
 local sprintButton
 
 local mainUI = player:WaitForChild("PlayerGui"):WaitForChild("MainUI")
+local mainGame = mainUI.Initiator.Main_Game
 local mainFrame = mainUI:WaitForChild("MainFrame")
 local healthbar = mainFrame:WaitForChild("Healthbar")
 local effects = healthbar:WaitForChild("Effects")
@@ -251,8 +260,7 @@ updateStaminaBar()
 
 print("Stamina System executed successfully!")
 
-require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("Stamina System by @FOCUS_MAX.")
-task.wait(2)
-require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("Press the 'Q' Key or the Button to Sprint.")
-task.wait(3)
-require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("This script is Beta Version, and there may be some bugs.")
+for _, Text in ipairs(Captions) do
+    require(mainGame).caption(Text, true)
+    task.wait(3)
+end
