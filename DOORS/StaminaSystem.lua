@@ -13,7 +13,7 @@ local RunService = game:GetService("RunService")
 local GuiService = game:GetService("GuiService")
 local TweenService = game:GetService("TweenService")
 
-local Captions = {
+local ExecCaptions = {
     "Stamina System executed successfully!",
     "Made by @FOCUSED_LIGHT.",
     "Press the 'Q' Key or the Button to Sprint.",
@@ -212,7 +212,7 @@ RunService.Heartbeat:Connect(function(dt)
             isExhausted = true
             humanoid.WalkSpeed = baseWalkSpeed
             exhaustSound:Play()
-            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("You're tired.")
+            require(mainGame).caption("You're tired.")
             print("Stamina is exhausted.")
             
             if sprintButton then
@@ -260,7 +260,7 @@ updateStaminaBar()
 
 print("Stamina System executed successfully!")
 
-for _, Text in ipairs(Captions) do
+for _, Text in ipairs(ExecCaptions) do
     require(mainGame).caption(Text, true)
     task.wait(2.5)
 end
