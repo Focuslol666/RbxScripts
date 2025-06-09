@@ -6,7 +6,7 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 
 local entity = spawner.Create({
 	Entity = {
-		Name = "A60",
+		Name = "A-60",
 		Asset = "rbxassetid://12410210552",
 		HeightOffset = 0
 	},
