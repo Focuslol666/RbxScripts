@@ -1,3 +1,4 @@
+-- Default Config
 _G.A90Config = {
     Face = "rbxassetid://11924478218",
     AngryFace = "rbxassetid://11924266902",
