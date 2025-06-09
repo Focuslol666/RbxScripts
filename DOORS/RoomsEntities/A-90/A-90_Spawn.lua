@@ -1,3 +1,4 @@
+-- Made by @Focuslol666
 function RunA90()
     local config = _G.A90Config
 
