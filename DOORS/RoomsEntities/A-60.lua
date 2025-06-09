@@ -50,7 +50,7 @@ local entity = spawner.Create({
 		Break = true
 	},
 	Death = {
-		Type = "Guiding", -- "Curious"
+		Type = "Curious", -- "Curious"
 		Hints = {"Death", "Hints", "Go", "Here"},
 		Cause = "A-60"
 	}
