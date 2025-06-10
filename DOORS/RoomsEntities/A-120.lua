@@ -6,8 +6,8 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 
 local entity = spawner.Create({
 	Entity = {
-		Name = "A-120",
-		Asset = "rbxassetid://12907330705",
+		Name = "A120",
+		Asset = "rbxassetid://12378548729",
 		HeightOffset = 0
 	},
 	Lights = {
@@ -35,7 +35,7 @@ local entity = spawner.Create({
 		Enabled = true,
 		Type = "Ambush", -- "Blitz"
 		Min = 1,
-		Max = 2,
+		Max = 1,
 		Delay = 2
 	},
 	Damage = {
