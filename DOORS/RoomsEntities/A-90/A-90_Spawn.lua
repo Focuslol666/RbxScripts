@@ -21,7 +21,6 @@ function RunA90()
 
         while true do
             if gui.MainUI.Jumpscare.Jumpscare_A90.FaceAngry.Visible then
-                task.wait(2.5)
                 game.Players.LocalPlayer.Character.Humanoid:TakeDamage(config.Damage)
                 break
             end
@@ -29,7 +28,7 @@ function RunA90()
         end
         if game:GetService("Players").LocalPlayer.Character.Humanoid.Health <= 0 then
             game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "A-90"
-            firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"You died to A-90"},"Yellow")
+            firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"You died to A-90", "Stop your Steps!"},"Yellow")
         end
     end)()
 end
