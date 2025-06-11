@@ -16,7 +16,7 @@ local entity = spawner.Create({
 			Duration = 1
 		},
 		Shatter = false,
-		Repair = true
+		Repair = false
 	},
 	Earthquake = {
 		Enabled = false
