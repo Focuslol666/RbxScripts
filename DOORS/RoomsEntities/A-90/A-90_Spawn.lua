@@ -22,7 +22,7 @@ function RunA90()
         while true do
             if gui.MainUI.Jumpscare.Jumpscare_A90.FaceAngry.Visible then
                 task.wait(1)
-                game.Players.LocalPlayer.Character.Humanoid:TakeDamage(config.Damage)
+                game.Players.LocalPlayer.Character.Humanoid.Health -= config.Damage
                 break
             end
             task.wait()
