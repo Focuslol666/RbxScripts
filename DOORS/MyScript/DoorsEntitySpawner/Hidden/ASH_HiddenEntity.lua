@@ -1,3 +1,6 @@
+-- Version: v0.5_beta
+-- Made by @FOCUSED_LIGHT (Scripter), @ASH_Uranium235 (Owner, Model Author) & @Nameless_MONSTER (Helper).
+
 function GitPNG(GithubImg,ImageName)
 	local url=GithubImg
 	if not isfile(ImageName..".png") then
