@@ -12,6 +12,7 @@ function GitSND(GithubSnd,SoundName)
 	end
 	return (getcustomasset or getsynasset)(SoundName..".mp3")
 end
+
 ---====== Load spawner 加载生成器 ======---
 
 local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua"))()
@@ -21,56 +22,61 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 local entity = spawner.Create({
     Entity = {
         Name = "ASH500",
-        Asset = "https://github.com/Focuslol666/RbxScripts/blob/b14f2cd9561a07d543331bb021b762291014f796/DOORS/MyScript/Other/ASH500.rbxm?raw=true", -- 输入模型id
-        HeightOffset = 1 -- 高度偏离
+        Asset = "https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/ASH500.rbxm",
+        HeightOffset = 0
     },
-    Lights = { -- 调节灯光效果
-        Flicker = { -- 闪烁
-            Enabled = false, -- 是(true)否(false)激活闪烁效果
-            Duration = 1 -- 持续时间(秒)
+    Lights = {
+        Flicker = {
+            Enabled = false,
+            Duration = 1
         },
-        Shatter = true, -- 是(true)否(false)打碎灯光
-        Repair = false -- 是(true)否(false)不打碎灯光
+        Shatter = true,
+        Repair = false
     },
-    Earthquake = { -- 房间震动
-        Enabled = false -- 是(true)否(false)会导致房间震动
+    Earthquake = {
+        Enabled = false
     },
-    CameraShake = { -- 视角摇晃
-        Enabled = true, --是(true)否(false)会导致视角摇晃
-        Range = 100, -- 范围
-        Values = {10, 10, 0.1, 1} -- 量级, 粗糙度, 淡入, 淡出 (按照顺序填入数字)
+    CameraShake = {
+        Enabled = true,
+        Range = 80,
+        Values = {10, 10, 0.1, 1}
     },
-    Movement = { -- 移动
-        Speed = 75, -- 移动速度
-        Delay = 1, -- 移动延迟
-        Reversed = false -- 是(true)否(false)调为相反移动
+    Movement = {
+        Speed = 75,
+        Delay = 1,
+        Reversed = false
     },
-    Rebounding = { -- 来回移动
-        Enabled = true, -- 是(true)否(false)来回移动
-        Type = "Ambush", -- 可切换为"Blitz"
-        Min = 3, -- 最少来回次数
-        Max = 5, -- 最多来回次数
-        Delay = 1 --来回延迟
+    Rebounding = {
+        Enabled = true,
+        Type = "Ambush",
+        Min = 3,
+        Max = 5,
+        Delay = 1
     },
-    Damage = { -- 伤害
-        Enabled = true, -- 是(true)否(false)对玩家造成伤害
-        Range = 40, -- 伤害范围
-        Amount = 23500 -- 伤害数额
+    Damage = {
+        Enabled = true,
+        Range = 30,
+        Amount = 2352352350 -- 逆天数额😱😱😱
     },
-    Crucifixion = { -- 十字架封印效果
-        Enabled = false, -- 是(true)否(false)能对其使用十字架
-        Range = 1, -- 封印范围
-        Resist = true, -- 是(true)否(false)只能被控制
-        Break = false -- 是(true)否(false)可以被封印
+    Crucifixion = {
+        Enabled = false, -- 想啥呢十字架根本无效😈
+        Range = 1,
+        Resist = true,
+        Break = false
     },
     Death = {
-        Type = "Guiding", -- 可切换为"Curious"
-        Hints = {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="}, -- 可以添加、删除和更改字幕
-        Cause = "ASH_Uranium235" -- 总览中的死因
+        Type = "Guiding",
+        Hints = {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},
+        Cause = "ASH_Uranium235"
     }
 })
 
 ---====== Debug entity 实体调试 ======---
+
+local caption = nil
+local originalFont = nil
+local originalTextColor = nil
+
 local function SpotlightRotation(speed)
     local part1 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld["Part(Light-A)"]
     local part2 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld["Part(Light-B)"]
@@ -83,67 +89,126 @@ local function SpotlightRotation(speed)
         part2.Orientation += Vector3.new(0, rotationSpeed * deltaTime, 0)
         part3.Orientation += Vector3.new(0, rotationSpeed * deltaTime, 0)
     end)
-    print("The spotlight is turning")
 end
 
-local loopController = nil
-local caption = nil
-
-local canDamage = true
-local damageCooldown = 0.25
+local damageCircles = {
+    {range = 200, interval = 1},
+    {range = 120, interval = 0.5},
+    {range = 90,  interval = 0.1},
+    {range = 60,  interval = 0.05}
+}
 
 entity:SetCallback("OnSpawned", function()
-    print("Entity has spawned")
+    print("Hi.")
+    
     caption = game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Caption
-    OGColor = caption.TextColor3
-    OGFont = caption.Font
+    originalFont = caption.Font
+    originalTextColor = caption.TextColor3
     caption.TextColor3 = Color3.fromRGB(132, 126, 132)
     caption.Font = Enum.Font.Kalam
+    
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."! =)")
     task.wait(3)
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.")
+    
+    repeat task.wait() until workspace:FindFirstChild("ASH500")
+    local entityModel = workspace.ASH500:FindFirstChildWhichIsA("Model")
+    if entityModel then
+        SpotlightRotation(60)
+        
+        local billboard = entityModel:FindFirstChild("BillboardGui", true)
+        if billboard then
+            while task.wait(math.random(2, 10)) and entityModel.Parent do
+                billboard.AlwaysOnTop = not billboard.AlwaysOnTop
+            end
+        end
+    end
 end)
 
 entity:SetCallback("OnStartMoving", function()
-    print("Entity has started moving")
+    print("I'm coming.")
+    SpotlightRotation(60)
     loopController = {
         Active = true,
         Stop = function(self)
             self.Active = false
         end
     }
+    
     coroutine.wrap(function()
-        while loopController.Active do
+        local RunService = game:GetService("RunService")
+        local damageTimers = {}
+        for i = 1, #damageCircles do
+            damageTimers[i] = 0
+        end
+        
+        local damageConnection
+        damageConnection = RunService.Heartbeat:Connect(function(deltaTime)
+            if not loopController.Active then
+                damageConnection:Disconnect()
+                return
+            end
+            
             if game:GetService("Players").LocalPlayer.Character and not game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.HideVignette.Visible then
+                
                 if not game.Players.LocalPlayer.Character then return end
                 local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
                 if not humanoid or humanoid.Health <= 0 then return end
-                    game:GetService("Players").LocalPlayer.Character.Humanoid:TakeDamage(1)
-                if game:GetService("Players").LocalPlayer.Character.Humanoid.Health <= 0 then
+                
+                local entityModel = workspace.ASH500:FindFirstChild("ASH_Uranium235(Entity-001)")
+                local playerChar = game.Players.LocalPlayer.Character
+                
+                if entityModel and playerChar then
+                    local entityPos = entityModel:GetPivot().Position
+                    local playerPos = playerChar:GetPivot().Position
+                    
+                    local horizontalDistance = (Vector3.new(entityPos.X, 0, entityPos.Z) - 
+                                              Vector3.new(playerPos.X, 0, playerPos.Z)).Magnitude
+                    
+                    local inAnyCircle = false
+                    for i, circle in ipairs(damageCircles) do
+                        if horizontalDistance <= circle.range then
+                            inAnyCircle = true
+                            damageTimers[i] = damageTimers[i] + deltaTime
+                            
+                            if damageTimers[i] >= circle.interval then
+                                humanoid:TakeDamage(1)
+                                damageTimers[i] = 0
+                            end
+                        end
+                    end
+                end
+                
+                if humanoid.Health <= 0 then
                     loopController:Stop()
+                    damageConnection:Disconnect()
+                    if playerChar:FindFirstChild("RadiationEffect") then
+                        playerChar.RadiationEffect:Destroy()
+                    end
                     game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
-                    firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
+                    firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="}, "Blue")
                 end
             end
-            task.wait(0.17)
-        end
+        end)
     end)()
 end)
 entity:SetCallback("OnDespawning", function()
-    print("Entity is despawning")
+    print("Goodbye.")
     if connection then
         connection:Disconnect()
     end
     workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = false
-    if loopController then
-        loopController:Stop()
-    end
+    loopController:Stop()
     if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")
         task.wait(3)
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: I hope you can stand up when I meet you next time.")
         task.wait(1)
+        caption.Font = originalFont
+        caption.TextColor3 = originalTextColor
+
 ---====== Achievement Giver 给予成就 ======---
+
         if not _G.achievementLock then
             _G.achievementLock = {}
         end
@@ -153,90 +218,77 @@ entity:SetCallback("OnDespawning", function()
             achievementGiver({
                 Title = achievementTitle,
                 Desc = "Enduring the pain caused by Radiation.",
-                Reason = "Encounter and Survive rare entity called ASH_Uranium235.",
-                Image = GitPNG("https://github.com/Focuslol666/RbxScripts/blob/00aad5b4efb6bee04b8199b08b25d90e88efa76d/DOORS/MyScript/Other/SurviveASH500.png?raw=true","Survive_ASH500"), -- 输入成就图id
+                Reason = "Encounter and Survive rare Entity called ASH_Uranium235.",
+                Image = GitPNG("https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/SurviveASH500.png","Survive_ASH500"),
             })    
             _G.achievementLock[achievementTitle] = true
             print(achievementTitle.." achievement unlocked and given!")
         else
             warn(achievementTitle.." achievement has been unlocked.")
         end
-        caption.TextColor3 = OGColor
-        caption.Font = OGFont
     else
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings...")
         task.wait(3)
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created disasters, but they can't avoid them at all.")
         task.wait(1)
-        caption.TextColor3 = OGColor
-        caption.Font = OGFont
+        caption.Font = originalFont
+        caption.TextColor3 = originalTextColor
     end
 end)
 
 entity:SetCallback("OnEnterRoom", function(room, firstTime)
     if firstTime == true then
-        print("Entity has entered room: ".. room.Name.. " for the first time")
+        print("Where is this? Oh, I seem to be at the DOOR ".. room.Name)
     else
-        print("Entity has entered room: ".. room.Name.. " again")
+        print("I'm here again, DOOR ".. room.Name)
     end
 end)
 
 entity:SetCallback("OnLookAt", function(lineOfSight)
     if lineOfSight == true then
-        print("Player is looking at entity")
-        if canDamage then
-            canDamage = false
-            game:GetService("Players").LocalPlayer.Character.Humanoid:TakeDamage(5)
-            task.wait(damageCooldown)
-            canDamage = true
-        end
-        if game:GetService("Players").LocalPlayer.Character.Humanoid.Health <= 0 then
-            game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
-            firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},"Blue")
-        end
-        --[[
-        local Players = game:GetService("Players")
-        local RunService = game:GetService("RunService")
-        local player = Players.LocalPlayer
-        local playerGui = player:WaitForChild("PlayerGui")
-        local screenGui = Instance.new("ScreenGui")
-        screenGui.Name = "GlitchScreen"
-        screenGui.ResetOnSpawn = false
-        screenGui.IgnoreGuiInset = true
-        screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        screenGui.Enabled = true
-        local background = Instance.new("ImageLabel")
-        background.Name = "ImageLabel"
-        background.Size = UDim2.new(1, 0, 1, 0)
-        background.Position = UDim2.new(0, 0, 0, 0)
-        background.BackgroundTransparency = 0.5
-        background.BorderSizePixel = 0
-        background.Image = "rbxassetid://7218675830"
-        background.ScaleType = Enum.ScaleType.Crop
-        background.Parent = screenGui
-        screenGui.Parent = playerGui
-        ]]
+        print("You seem to be paying attention to me..")
     else
-        print("Player view is obstructed by something")
-        -- screenGui.Enabled = false
+        print("Okay, that's it. Don't look at me.")
     end
 end)
 
 entity:SetCallback("OnRebounding", function(startOfRebound)
     if startOfRebound == true then
-        print("Entity has started rebounding")
+        print("I'm back.")
     else
-        print("Entity has finished rebounding")
+        print("I'm back again.")
     end
 end)
 
 entity:SetCallback("OnDespawned", function()
-    print("Entity has despawned")
+    print("emm...")
+    coroutine.wrap(function()
+        local rand = math.random(1, 100)
+    
+        if rand <= 25 then
+            pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/Focuslol666/RbxScripts/refs/heads/main/DOORS/RoomsEntities/A-60.lua"))()
+                print("Last Attack: A-60")
+            end)
+        elseif rand <= 50 then
+            pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/Focuslol666/RbxScripts/refs/heads/main/DOORS/RoomsEntities/A-90/A-90_BranchToASH500.lua"))()
+                print("Last Attack: A-90")
+            end)
+        elseif rand <= 75 then
+            pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/Focuslol666/RbxScripts/refs/heads/main/DOORS/RoomsEntities/A-120.lua"))()
+                print("Last Attack: A-120")
+            end)
+        else
+            print("You're lucky there aren't any Rooms entity spawned.")
+        end
+    end)()
 end)
 
 entity:SetCallback("OnDamagePlayer", function(newHealth)
     if newHealth == 0 then
-        print("Entity has killed the player")
+        print("Surprise!")
         --[[
         local JumpscareGui = Instance.new("ScreenGui")
         local Background = Instance.new("Frame")
@@ -281,8 +333,12 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
         JumpscareGui:Destroy()
         ]]
     else
-        print("Entity has damaged the player")
+        print("Huh? Why are you still alive?")
     end
+end)
+
+entity:SetCallback("OnCrucified", function()
+    print("Shit Fuck!") -- 但是你永远无法触发此回调💀💀💀
 end)
 
 ---====== Run entity 运行实体 ======---
