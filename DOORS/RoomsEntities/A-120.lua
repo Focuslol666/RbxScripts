@@ -41,7 +41,7 @@ local entity = spawner.Create({
 	Damage = {
 		Enabled = true,
 		Range = 40,
-		Amount = 100
+		Amount = 23500
 	},
 	Crucifixion = {
 		Enabled = true,
