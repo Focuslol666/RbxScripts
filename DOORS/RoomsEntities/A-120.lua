@@ -6,7 +6,7 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 
 local entity = spawner.Create({
 	Entity = {
-		Name = "A120",
+		Name = "A-120",
 		Asset = "rbxassetid://12378548729",
 		HeightOffset = 0
 	},
@@ -51,7 +51,7 @@ local entity = spawner.Create({
 	},
 	Death = {
 		Type = "Curious", -- "Curious"
-		Hints = {"Death", "Hints", "Go", "Here"},
+		Hints = {"You died to A-120", "Run and Hide!"},
 		Cause = "A-120"
 	}
 })
