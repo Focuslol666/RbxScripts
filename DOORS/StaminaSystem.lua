@@ -8,6 +8,9 @@ Mobile: Press the Button to Sprint.
 ]]
 
 local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local GuiService = game:GetService("GuiService")
@@ -18,8 +21,11 @@ local ExecCaptions = {
     "Made by @FOCUSED_LIGHT.",
     "Press the 'Q' Key or the Button to Sprint.",
     "This script is Beta Version, and there may be some bugs.",
-    "Fuck @Sanren! You parents are dead, Sanren. (bruh)"
+    "Fuck @DY Film_A-101! Film_A-101's parents are dead."
 }
+if player.UserId == 4044271400 or player.UserId == 4287873323 or player.UserId == 7208141087 then
+    table.insert(ExecCaptions, "You can switch Infinite Stamina ON or OFF with the Toggle Button.")
+end
 
 local MAX_STAMINA = 100
 local STAMINA_DRAIN_RATE = MAX_STAMINA / 7
@@ -28,17 +34,18 @@ local SPRINT_SPEED_BOOST = 4
 local EXHAUSTED_SOUND_ID = "rbxassetid://8258601891"
 local RECOVER_THRESHOLD = 0.75
 
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
 local stamina = MAX_STAMINA
 local isSprinting = false
 local isExhausted = false
 local baseWalkSpeed = humanoid.WalkSpeed
 local sprintButton
 
+local infiniteStaminaEnabled = false
+local infiniteStaminaToggle
+
 local mainUI = player:WaitForChild("PlayerGui"):WaitForChild("MainUI")
 local mainGame = mainUI.Initiator.Main_Game
+
 local mainFrame = mainUI:WaitForChild("MainFrame")
 local healthbar = mainFrame:WaitForChild("Healthbar")
 local effects = healthbar:WaitForChild("Effects")
@@ -49,14 +56,50 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "StaminaGui"
 screenGui.IgnoreGuiInset = true
 screenGui.Parent = player.PlayerGui
+screenGui.Enabled = true
 
-screenGui.Enabled = true -- You can select true or false to enable or disable Stamina.
+local staminaBarPosition = UDim2.new(0.75, 0, 0.9, 0)
+
+if player.UserId == 4044271400 or player.UserId == 4287873323 or player.UserId == 7208141087 then
+    infiniteStaminaToggle = Instance.new("TextButton")
+    infiniteStaminaToggle.Name = "InfiniteStaminaToggle"
+    infiniteStaminaToggle.Size = UDim2.new(0.04, 0, 0.03, 0)
+    infiniteStaminaToggle.Position = UDim2.new(0.75, 0, 0.9, 0)
+    infiniteStaminaToggle.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    infiniteStaminaToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    infiniteStaminaToggle.Text = "OFF"
+    infiniteStaminaToggle.Font = Enum.Font.Oswald
+    infiniteStaminaToggle.TextSize = 14
+    infiniteStaminaToggle.ZIndex = 10
+    infiniteStaminaToggle.Parent = screenGui
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0.2, 0)
+    corner.Parent = infiniteStaminaToggle
+    
+    infiniteStaminaToggle.MouseButton1Click:Connect(function()
+        infiniteStaminaEnabled = not infiniteStaminaEnabled
+        if infiniteStaminaEnabled then
+            infiniteStaminaToggle.BackgroundColor3 = Color3.fromRGB(255, 222, 189)
+            infiniteStaminaToggle.TextColor3 = Color3.fromRGB(0, 0, 0)
+            infiniteStaminaToggle.Text = "ON"
+            require(mainGame).caption("Infinite Stamina: ON")
+        else
+            infiniteStaminaToggle.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+            infiniteStaminaToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+            infiniteStaminaToggle.Text = "OFF"
+            require(mainGame).caption("Infinite Stamina: OFF")
+        end
+    end)
+    
+    staminaBarPosition = UDim2.new(0.75, 0, 0.95, 0)
+end
 
 local background = Instance.new("Frame")
 background.Name = "Background"
 background.BackgroundTransparency = 0.2
 background.Size = UDim2.new(0.2, 0, 0.03, 0)
-background.Position = UDim2.new(0.75, 0, 0.9, 0)
+background.Position = staminaBarPosition
 background.BackgroundColor3 = Color3.fromRGB(30, 17, 16)
 background.BorderSizePixel = 2
 background.BorderColor3 = Color3.fromRGB(50, 40, 30)
@@ -94,7 +137,7 @@ if UserInputService.TouchEnabled then
     local buttonSize = 0.10
     sprintButton.Size = UDim2.new(buttonSize, 0, buttonSize, 0)
     
-    sprintButton.Position = UDim2.new(0.75, 0, 0.5, 0)
+    sprintButton.Position = UDim2.new(0.94, 0, 0.5, 0)
     sprintButton.AnchorPoint = Vector2.new(0.5, 0.5)
     
     sprintButton.Text = "Sprint"
@@ -188,6 +231,9 @@ RunService.Heartbeat:Connect(function(dt)
         return
     end
     
+    local currentDrainRate = infiniteStaminaEnabled and 0 or STAMINA_DRAIN_RATE
+    local currentRecoverRate = infiniteStaminaEnabled and MAX_STAMINA / 0.01 or STAMINA_RECOVER_RATE
+    
     if not isSprinting and humanoid.WalkSpeed ~= baseWalkSpeed then
         baseWalkSpeed = humanoid.WalkSpeed
     end
@@ -201,13 +247,13 @@ RunService.Heartbeat:Connect(function(dt)
                 sprintButton.BackgroundColor3 = Color3.fromRGB(255, 222, 189)
             end
         else
-            stamina = math.min(stamina + STAMINA_RECOVER_RATE * dt, MAX_STAMINA)
+            stamina = math.min(stamina + currentRecoverRate * dt, MAX_STAMINA)
         end
         
     elseif isSprinting then
-        stamina = math.max(stamina - STAMINA_DRAIN_RATE * dt, 0)
+        stamina = math.max(stamina - currentDrainRate * dt, 0)
         
-        if stamina <= 0 then
+        if stamina <= 0 and not infiniteStaminaEnabled then
             isSprinting = false
             isExhausted = true
             humanoid.WalkSpeed = baseWalkSpeed
@@ -226,10 +272,14 @@ RunService.Heartbeat:Connect(function(dt)
             humanoid.WalkSpeed = baseWalkSpeed + SPRINT_SPEED_BOOST
             
             speedBoostEffect.Visible = true
+            
+            if infiniteStaminaEnabled then
+                stamina = MAX_STAMINA
+            end
         end
     
     else
-        stamina = math.min(stamina + STAMINA_RECOVER_RATE * dt, MAX_STAMINA)
+        stamina = math.min(stamina + currentRecoverRate * dt, MAX_STAMINA)
         humanoid.WalkSpeed = baseWalkSpeed
         
         speedBoostEffect.Visible = false
