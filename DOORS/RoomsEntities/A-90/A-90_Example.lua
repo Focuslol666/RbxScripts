@@ -1,6 +1,6 @@
 -- Doors Custom A-90 Spawner
 -- Made by @Focuslol666
--- Version: v1_Alpha
+-- Version: v1.25_Alpha
 
 ---=== Set the Config ===---
 -- Default
