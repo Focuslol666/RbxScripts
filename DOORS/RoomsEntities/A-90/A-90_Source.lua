@@ -11,29 +11,32 @@ function RunA90()
 
     if not _G.ogA90Config.Saved then
         _G.ogA90Config = {
-            Face = gui.MainUI.Jumpscare.Jumpscare_A90.Face.Image,
-            AngryFace = gui.MainUI.Jumpscare.Jumpscare_A90.FaceAngry.Image,
-            StopIcon = gui.MainUI.Jumpscare.Jumpscare_A90.StopIcon.Image,
-            StaticColor = gui.MainUI.Jumpscare.Jumpscare_A90.Static.ImageColor3,
-            Static2Color = gui.MainUI.Jumpscare.Jumpscare_A90.Static2.ImageColor3,
-            StopStaticColor = gui.MainUI.Jumpscare.Jumpscare_A90.StopIcon.StopStatic.ImageColor3,
-            HitSound = gui.MainUI.Initiator.Main_Game.RemoteListener.Modules.A90.Hit.SoundId,
-            SpawnSound = gui.MainUI.Initiator.Main_Game.RemoteListener.Modules.A90.Spawn.SoundId,
+            Assets = {
+                Face = gui.MainUI.Jumpscare.Jumpscare_A90.Face.Image,
+                AngryFace = gui.MainUI.Jumpscare.Jumpscare_A90.FaceAngry.Image,
+                StopIcon = gui.MainUI.Jumpscare.Jumpscare_A90.StopIcon.Image,
+                StaticColor = gui.MainUI.Jumpscare.Jumpscare_A90.Static.ImageColor3,
+                Static2Color = gui.MainUI.Jumpscare.Jumpscare_A90.Static2.ImageColor3,
+                StopStaticColor = gui.MainUI.Jumpscare.Jumpscare_A90.StopIcon.StopStatic.ImageColor3,
+                HitSound = gui.MainUI.Initiator.Main_Game.RemoteListener.Modules.A90.Hit.SoundId,
+                SpawnSound = gui.MainUI.Initiator.Main_Game.RemoteListener.Modules.A90.Spawn.SoundId
+            },
             Saved = true
         }
     end
 
-    gui.MainUI.Jumpscare.Jumpscare_A90.Face.Image = config.Face
-    gui.MainUI.Jumpscare.Jumpscare_A90.FaceAngry.Image = config.AngryFace
-    gui.MainUI.Jumpscare.Jumpscare_A90.StopIcon.Image = config.StopIcon
-    gui.MainUI.Jumpscare.Jumpscare_A90.Static.ImageColor3 = config.StaticColor
-    gui.MainUI.Jumpscare.Jumpscare_A90.Static2.ImageColor3 = config.StaticColor
-    gui.MainUI.Jumpscare.Jumpscare_A90.StopIcon.StopStatic.ImageColor3 = config.StaticColor
-    gui.MainUI.Initiator.Main_Game.RemoteListener.Modules.A90.Hit.SoundId = config.HitSound
-    gui.MainUI.Initiator.Main_Game.RemoteListener.Modules.A90.Spawn.SoundId = config.SpawnSound
+    local assets = config.Assets
+    gui.MainUI.Jumpscare.Jumpscare_A90.Face.Image = assets.Face
+    gui.MainUI.Jumpscare.Jumpscare_A90.FaceAngry.Image = assets.AngryFace
+    gui.MainUI.Jumpscare.Jumpscare_A90.StopIcon.Image = assets.StopIcon
+    gui.MainUI.Jumpscare.Jumpscare_A90.Static.ImageColor3 = assets.StaticColor
+    gui.MainUI.Jumpscare.Jumpscare_A90.Static2.ImageColor3 = assets.StaticColor
+    gui.MainUI.Jumpscare.Jumpscare_A90.StopIcon.StopStatic.ImageColor3 = assets.StaticColor
+    gui.MainUI.Initiator.Main_Game.RemoteListener.Modules.A90.Hit.SoundId = assets.HitSound
+    gui.MainUI.Initiator.Main_Game.RemoteListener.Modules.A90.Spawn.SoundId = assets.SpawnSound
 
     local function RestoreogConfig()
-        local og = _G.ogA90Config
+        local og = _G.ogA90Config.Assets
         
         gui.MainUI.Jumpscare.Jumpscare_A90.Face.Image = og.Face
         gui.MainUI.Jumpscare.Jumpscare_A90.FaceAngry.Image = og.AngryFace
@@ -53,17 +56,21 @@ function RunA90()
         while not gui.MainUI.Jumpscare.Jumpscare_A90.FaceAngry.Visible do
             task.wait()
         end
+        
         task.wait(1)
+        
+        local death = config.Death
         local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
         if humanoid then
-            local remainingHealth = humanoid.Health - config.Damage
+            local remainingHealth = humanoid.Health - death.Damage
             
             if remainingHealth <= 0 then
                 humanoid.Health = 0
             else
-                humanoid:TakeDamage(config.Damage)
+                humanoid:TakeDamage(death.Damage)
             end
         end
+
         task.wait(0.1)
         local isDead = false
         if player.Character and player.Character:FindFirstChild("Humanoid") then
@@ -73,11 +80,11 @@ function RunA90()
         if isDead then
             local stats = game.ReplicatedStorage.GameStats:FindFirstChild("Player_".. player.Name)
             if stats then
-                stats.Total.DeathCause.Value = config.Cause
+                stats.Total.DeathCause.Value = death.Cause
             end
             
             if firesignal then
-                firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, config.Hints, config.HintType)
+                firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, death.Hints, death.HintType)
             end
         end
 
@@ -97,7 +104,7 @@ game.Players.LocalPlayer.CharacterAdded:Connect(function()
     if _G.ogA90Config.Saved then
         task.wait(1)
         local gui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-        local og = _G.ogA90Config
+        local og = _G.ogA90Config.Assets
         
         if gui:FindFirstChild("MainUI") then
             gui.MainUI.Jumpscare.Jumpscare_A90.Face.Image = og.Face
