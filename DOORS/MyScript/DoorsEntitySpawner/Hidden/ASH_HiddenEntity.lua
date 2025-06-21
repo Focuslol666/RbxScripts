@@ -1,4 +1,4 @@
--- Version: v0.5_beta
+-- Version: v0.85_Beta
 -- Made by @FOCUSED_LIGHT (Scripter), @ASH_Uranium235 (Owner, Model Author) & @Nameless_MONSTER (Helper).
 
 function GitPNG(GithubImg,ImageName)
@@ -15,6 +15,78 @@ function GitSND(GithubSnd,SoundName)
 	end
 	return (getcustomasset or getsynasset)(SoundName..".mp3")
 end
+
+local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
+local colorCorrection = Lighting:FindFirstChild("ColorCorrectionEffect")
+if not colorCorrection then
+    colorCorrection = Instance.new("ColorCorrectionEffect")
+    colorCorrection.Name = "ColorCorrectionEffect"
+    colorCorrection.Parent = Lighting
+    colorCorrection.Enabled = true
+end
+local config = {
+    targetColor = Color3.fromRGB(255, 255, 0),
+    fadeInDuration = 0,
+    fadeOutDuration = 6,
+    intensity = 0.6
+}
+local currentIntensity = 0
+local timer = 0
+local isFadingIn = true
+local effectActive = true
+local function resetEffect()
+    colorCorrection.TintColor = Color3.new(1, 1, 1)
+end
+resetEffect()
+local function startFadeEffect()
+    local connection
+    connection = RunService.Heartbeat:Connect(function(deltaTime)
+        if not effectActive then
+            connection:Disconnect()
+            return
+        end
+        timer += deltaTime
+        if isFadingIn then
+            local progress = timer / config.fadeInDuration
+            currentIntensity = math.min(progress * config.intensity, config.intensity)
+            if progress >= 1 then
+                timer = 0
+                isFadingIn = false
+            end
+        else
+            local progress = timer / config.fadeOutDuration
+            currentIntensity = math.max(config.intensity - (progress * config.intensity), 0)
+            if progress >= 1 then
+                effectActive = false
+                resetEffect()
+                connection:Disconnect()
+                return
+            end
+        end
+        colorCorrection.TintColor = Color3.new(
+            1 - (1 - config.targetColor.R) * currentIntensity,
+            1 - (1 - config.targetColor.G) * currentIntensity,
+            1 - (1 - config.targetColor.B) * currentIntensity
+        )
+    end)
+end
+startFadeEffect()
+
+local CameraShaker = require(game.ReplicatedStorage.CameraShaker)
+local camara = game.Workspace.CurrentCamera
+local camShake = CameraShaker.new(Enum.RenderPriority.Camera.Value, function(shakeCf)
+    camara.CFrame = camara.CFrame * shakeCf
+end)
+camShake:Start()
+camShake:ShakeOnce(10, 5, 2, 6)
+
+local snd = Instance.new("Sound", workspace)
+snd.SoundId = GitSND("https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/ASH_spawnWarning.mp3", "WARNING")
+snd.Name = "ASH_Warning"
+snd.Volume = 1
+snd:Play()
+task.wait(4)
 
 ---====== Load spawner 加载生成器 ======---
 
@@ -46,12 +118,12 @@ local entity = spawner.Create({
     },
     Movement = {
         Speed = 75,
-        Delay = 1,
+        Delay = 0.235,
         Reversed = false
     },
     Rebounding = {
         Enabled = true,
-        Type = "Ambush",
+        Type = "Ambush", -- "Blitz"
         Min = 3,
         Max = 5,
         Delay = 1
@@ -68,7 +140,7 @@ local entity = spawner.Create({
         Break = false
     },
     Death = {
-        Type = "Guiding",
+        Type = "Guiding", -- "Curious"
         Hints = {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},
         Cause = "ASH_Uranium235"
     }
@@ -81,9 +153,9 @@ local originalFont = nil
 local originalTextColor = nil
 
 local function SpotlightRotation(speed)
-    local part1 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld["Part(Light-A)"]
-    local part2 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld["Part(Light-B)"]
-    local part3 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[10].Weld["Part(Light-C)"]
+    local part1 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[14].Weld["SpotLight-A"]
+    local part2 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[14].Weld["SpotLight-B"]
+    local part3 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[14].Weld["SpotLight-C"]
     local rotationSpeed = speed or 1
     local RunService = game:GetService("RunService")
     local connection
@@ -103,34 +175,19 @@ local damageCircles = {
 
 entity:SetCallback("OnSpawned", function()
     print("Hi.")
-    
     caption = game.Players.LocalPlayer.PlayerGui.MainUI.MainFrame.Caption
     originalFont = caption.Font
     originalTextColor = caption.TextColor3
     caption.TextColor3 = Color3.fromRGB(132, 126, 132)
     caption.Font = Enum.Font.Kalam
-    
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."! =)")
     task.wait(3)
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.")
-    
-    repeat task.wait() until workspace:FindFirstChild("ASH500")
-    local entityModel = workspace.ASH500:FindFirstChildWhichIsA("Model")
-    if entityModel then
-        SpotlightRotation(60)
-        
-        local billboard = entityModel:FindFirstChild("BillboardGui", true)
-        if billboard then
-            while task.wait(math.random(2, 10)) and entityModel.Parent do
-                billboard.AlwaysOnTop = not billboard.AlwaysOnTop
-            end
-        end
-    end
 end)
 
 entity:SetCallback("OnStartMoving", function()
     print("I'm coming.")
-    SpotlightRotation(60)
+    SpotlightRotation(90)
     loopController = {
         Active = true,
         Stop = function(self)
@@ -197,6 +254,7 @@ entity:SetCallback("OnStartMoving", function()
 end)
 entity:SetCallback("OnDespawning", function()
     print("Goodbye.")
+    snd:Destroy()
     if connection then
         connection:Disconnect()
     end
@@ -206,9 +264,6 @@ entity:SetCallback("OnDespawning", function()
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")
         task.wait(3)
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: I hope you can stand up when I meet you next time.")
-        task.wait(1)
-        caption.Font = originalFont
-        caption.TextColor3 = originalTextColor
 
 ---====== Achievement Giver 给予成就 ======---
 
@@ -229,6 +284,9 @@ entity:SetCallback("OnDespawning", function()
         else
             warn(achievementTitle.." achievement has been unlocked.")
         end
+        task.wait(1)
+        caption.Font = originalFont
+        caption.TextColor3 = originalTextColor
     else
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings...")
         task.wait(3)
@@ -271,20 +329,20 @@ entity:SetCallback("OnDespawned", function()
         if rand <= 25 then
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/Focuslol666/RbxScripts/refs/heads/main/DOORS/RoomsEntities/A-60.lua"))()
-                print("Last Attack: A-60")
+                print("Secondary Attack: A-60")
             end)
         elseif rand <= 50 then
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/Focuslol666/RbxScripts/refs/heads/main/DOORS/RoomsEntities/A-90/A-90_BranchToASH500.lua"))()
-                print("Last Attack: A-90")
+                print("Secondary Attack: A-90")
             end)
         elseif rand <= 75 then
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/Focuslol666/RbxScripts/refs/heads/main/DOORS/RoomsEntities/A-120.lua"))()
-                print("Last Attack: A-120")
+                print("Secondary Attack: A-120")
             end)
         else
-            print("You're lucky there aren't any Rooms entity spawned.")
+            print("You're lucky, ASH has \"LEFT\", without Secondary Attacks.")
         end
     end)()
 end)
@@ -292,7 +350,6 @@ end)
 entity:SetCallback("OnDamagePlayer", function(newHealth)
     if newHealth == 0 then
         print("Surprise!")
-        --[[
         local JumpscareGui = Instance.new("ScreenGui")
         local Background = Instance.new("Frame")
         local Face = Instance.new("ImageLabel")
@@ -304,29 +361,29 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
         Background.BackgroundColor3 = Color3.fromRGB(77, 5, 99)
         Background.BorderSizePixel = 0
         Background.Size = UDim2.new(1, 0, 1, 0)
-        Background.ZIndex = 999
+        Background.ZIndex = 9999
         Face.Name = "ASH500_ScareFace"
         Face.AnchorPoint = Vector2.new(0.5, 0.5)
         Face.BackgroundTransparency = 1
         Face.Position = UDim2.new(0.5, 0, 0.5, 0)
         Face.ResampleMode = Enum.ResamplerMode.Pixelated
         Face.Size = UDim2.new(0, 150, 0, 150)
-        Face.Image = GitPNG("?raw=true", "ASH500_ScareImg")
+        Face.Image = "rbxassetid://11394027278" -- GitPNG("?raw=true", "ASH500_ScareImg")
         Background.Parent = JumpscareGui
         Face.Parent = Background
         local scare = Instance.new("Sound")
         scare.Parent = JumpscareGui
         scare.Name = "ASH500_ScareSound"
-        scare.SoundId = GitSND("?raw=true", "ASH500_ScareSnd")
-        scare.Volume = 6
+        scare.SoundId = "rbxassetid://10483790459" -- GitSND("?raw=true", "ASH500_ScareSnd")
+        scare.Volume = 10
         local distort = Instance.new("DistortionSoundEffect")
         distort.Parent = scare
         distort.Level = 0.75   
             task.spawn(function()
                 while JumpscareGui.Parent do
-                    Background.BackgroundColor3 = Color3.fromRGB(77, 5, 99)
+                    Background.BackgroundColor3 = Color3.fromRGB(48, 25, 52)
                     task.wait(math.random(25, 100) / 1000)
-                    Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    Background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
                     task.wait(math.random(25, 100) / 1000)
         end
     end)
@@ -334,15 +391,16 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
         scare:Play()
         task.wait(0.8)
         JumpscareGui:Destroy()
-        ]]
     else
         print("Huh? Why are you still alive?")
     end
 end)
 
+--[[
 entity:SetCallback("OnCrucified", function()
     print("Shit Fuck!") -- 但是你永远无法触发此回调💀💀💀
 end)
+]]
 
 ---====== Run entity 运行实体 ======---
 
