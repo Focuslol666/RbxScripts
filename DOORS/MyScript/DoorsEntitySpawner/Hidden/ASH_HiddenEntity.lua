@@ -1,4 +1,4 @@
--- Version: v0.85_Beta
+-- Version: v0.91_Beta
 -- Made by @FOCUSED_LIGHT (Scripter), @ASH_Uranium235 (Owner, Model Author) & @Nameless_MONSTER (Helper).
 
 function GitPNG(GithubImg,ImageName)
@@ -302,6 +302,17 @@ entity:SetCallback("OnEnterRoom", function(room, firstTime)
         print("Where is this? Oh, I seem to be at the DOOR ".. room.Name)
     else
         print("I'm here again, DOOR ".. room.Name)
+    end
+
+    if workspace.ASH500 and workspace.ASH500:FindFirstChild("ASH_Uranium235(Entity-001)") then
+        local entityModel = workspace.ASH500["ASH_Uranium235(Entity-001)"]
+        if entityModel and entityModel:FindFirstChild("Attachment") then
+            local billboard = entityModel.Attachment:FindFirstChild("BillboardGui")
+            if billboard then
+                local latestRoom = game:GetService("ReplicatedStorage").GameData.LatestRoom.Value
+                billboard.AlwaysOnTop = (room.Name == tostring(latestRoom))
+            end
+        end
     end
 end)
 
