@@ -1,14 +1,14 @@
--- Version: v0.91_Beta
+-- Version: v0.92_Beta
 -- Made by @FOCUSED_LIGHT (Scripter), @ASH_Uranium235 (Owner, Model Author) & @Nameless_MONSTER (Helper).
 
-function GitPNG(GithubImg,ImageName)
+function GitPNG(GithubImg, ImageName)
 	local url=GithubImg
 	if not isfile(ImageName..".png") then
 		writefile(ImageName..".png", game:HttpGet(url))
 	end
 	return (getcustomasset or getsynasset)(ImageName..".png")
 end
-function GitSND(GithubSnd,SoundName)
+function GitSND(GithubSnd, SoundName)
     local url=GithubSnd
     if not isfile(SoundName..".mp3") then
 	    writefile(SoundName..".mp3", game:HttpGet(url))
@@ -180,9 +180,15 @@ entity:SetCallback("OnSpawned", function()
     originalTextColor = caption.TextColor3
     caption.TextColor3 = Color3.fromRGB(132, 126, 132)
     caption.Font = Enum.Font.Kalam
-    require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."! =)")
-    task.wait(3)
-    require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.")
+    if game.Players.LocalPlayer.UserId == 4287873323 then
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: What? Are you also called "..game.Players.LocalPlayer.DisplayName.."?!")
+        task.wait(3)
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Are you the \"SECOND ME\"?")
+    else
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."! =)")
+        task.wait(3)
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.")
+    end
 end)
 
 entity:SetCallback("OnStartMoving", function()
@@ -261,10 +267,19 @@ entity:SetCallback("OnDespawning", function()
     workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = false
     loopController:Stop()
     if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")
-        task.wait(3)
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: I hope you can stand up when I meet you next time.")
-
+        if game.Players.LocalPlayer.UserId == 4287873323 then
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: Although I'm not sure if you're really \"SECOND ME\" or the Imposter...")
+            task.wait(2)
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: But you seem familiar with my attacks.")
+            task.wait(3)
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: So, I hope you can stand up when I meet you next time.")
+        else
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")
+            task.wait(3)
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: I hope you can stand up when I meet you next time.")
+        end
+        task.wait()
+        
 ---====== Achievement Giver 给予成就 ======---
 
         if not _G.achievementLock then
@@ -288,9 +303,13 @@ entity:SetCallback("OnDespawning", function()
         caption.Font = originalFont
         caption.TextColor3 = originalTextColor
     else
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings...")
-        task.wait(3)
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created disasters, but they can't avoid them at all.")
+        if game.Players.LocalPlayer.UserId == 4287873323 then
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: The \"SECOND ME\" is still too weak.")
+        else
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings...")
+            task.wait(3)
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created disasters, but they can't avoid them at all.")
+        end
         task.wait(1)
         caption.Font = originalFont
         caption.TextColor3 = originalTextColor
@@ -303,14 +322,20 @@ entity:SetCallback("OnEnterRoom", function(room, firstTime)
     else
         print("I'm here again, DOOR ".. room.Name)
     end
-
+    
+    local latestRoom = game:GetService("ReplicatedStorage").GameData.LatestRoom.Value
+    local prevRoom = latestRoom - 1
+    
     if workspace.ASH500 and workspace.ASH500:FindFirstChild("ASH_Uranium235(Entity-001)") then
         local entityModel = workspace.ASH500["ASH_Uranium235(Entity-001)"]
         if entityModel and entityModel:FindFirstChild("Attachment") then
             local billboard = entityModel.Attachment:FindFirstChild("BillboardGui")
             if billboard then
-                local latestRoom = game:GetService("ReplicatedStorage").GameData.LatestRoom.Value
-                billboard.AlwaysOnTop = (room.Name == tostring(latestRoom))
+                local roomNum = tonumber(room.Name)
+                local shouldShow = (roomNum == latestRoom) or (roomNum == prevRoom)
+                
+                billboard.AlwaysOnTop = shouldShow
+                
             end
         end
     end
