@@ -1,6 +1,7 @@
--- Version: v0.92_Beta
+-- Version: v0.94_Beta
 -- Made by @FOCUSED_LIGHT (Scripter), @ASH_Uranium235 (Owner, Model Author) & @Nameless_MONSTER (Helper).
 
+--// 获取Github资源 //--
 function GitPNG(GithubImg, ImageName)
 	local url=GithubImg
 	if not isfile(ImageName..".png") then
@@ -16,6 +17,9 @@ function GitSND(GithubSnd, SoundName)
 	return (getcustomasset or getsynasset)(SoundName..".mp3")
 end
 
+--// 实体生成前兆 //--
+
+-- 颜色渐变
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
 local colorCorrection = Lighting:FindFirstChild("ColorCorrectionEffect")
@@ -26,9 +30,9 @@ if not colorCorrection then
     colorCorrection.Enabled = true
 end
 local config = {
-    targetColor = Color3.fromRGB(255, 255, 0),
+    targetColor = Color3.fromRGB(255, 0, 0),
     fadeInDuration = 0,
-    fadeOutDuration = 6,
+    fadeOutDuration = 7,
     intensity = 0.6
 }
 local currentIntensity = 0
@@ -72,7 +76,7 @@ local function startFadeEffect()
     end)
 end
 startFadeEffect()
-
+-- 视角抖动
 local CameraShaker = require(game.ReplicatedStorage.CameraShaker)
 local camara = game.Workspace.CurrentCamera
 local camShake = CameraShaker.new(Enum.RenderPriority.Camera.Value, function(shakeCf)
@@ -80,7 +84,7 @@ local camShake = CameraShaker.new(Enum.RenderPriority.Camera.Value, function(sha
 end)
 camShake:Start()
 camShake:ShakeOnce(10, 5, 2, 6)
-
+-- 警告音频
 local snd = Instance.new("Sound", workspace)
 snd.SoundId = GitSND("https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/ASH_spawnWarning.mp3", "WARNING")
 snd.Name = "ASH_Warning"
@@ -167,6 +171,7 @@ local function SpotlightRotation(speed)
 end
 
 local damageCircles = {
+    {range = 310, interval = 4},
     {range = 200, interval = 1},
     {range = 120, interval = 0.5},
     {range = 90,  interval = 0.1},
@@ -280,7 +285,7 @@ entity:SetCallback("OnDespawning", function()
         end
         task.wait()
         
----====== Achievement Giver 给予成就 ======---
+---====== Load Achievement Giver 加载成就系统 ======---
 
         if not _G.achievementLock then
             _G.achievementLock = {}
