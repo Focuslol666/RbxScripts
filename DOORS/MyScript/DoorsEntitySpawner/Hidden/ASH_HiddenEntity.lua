@@ -284,7 +284,7 @@ entity:SetCallback("OnDespawning", function()
         else
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")
             task.wait(3)
-            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: I hope you can stand up when I meet you next time.")
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: I hope you can <u>Stand Up</u> when I meet you next time.")
         end
         task.wait()
         
