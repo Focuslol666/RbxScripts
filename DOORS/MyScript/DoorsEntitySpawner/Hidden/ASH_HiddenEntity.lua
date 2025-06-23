@@ -92,11 +92,11 @@ snd.Volume = 1
 snd:Play()
 task.wait(4)
 
----====== Load spawner 加载生成器 ======---
+---====== Load Spawner 加载生成器 ======---
 
 local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua"))()
 
----====== Create entity 创作实体 ======---
+---====== Create Entity 创作实体 ======---
 
 local entity = spawner.Create({
     Entity = {
@@ -150,12 +150,14 @@ local entity = spawner.Create({
     }
 })
 
----====== Debug entity 实体调试 ======---
+---====== Debug Entity 实体调试 ======---
 
+-- 初始定义Caption
 local caption = nil
 local originalFont = nil
 local originalTextColor = nil
 
+-- 聚光灯旋转
 local function SpotlightRotation(speed)
     local part1 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[14].Weld["SpotLight-A"]
     local part2 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[14].Weld["SpotLight-B"]
@@ -170,6 +172,7 @@ local function SpotlightRotation(speed)
     end)
 end
 
+-- 范围伤害
 local damageCircles = {
     {range = 310, interval = 4},
     {range = 200, interval = 1},
@@ -186,13 +189,13 @@ entity:SetCallback("OnSpawned", function()
     caption.TextColor3 = Color3.fromRGB(132, 126, 132)
     caption.Font = Enum.Font.Kalam
     if game.Players.LocalPlayer.UserId == 4287873323 then
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: What? Are you also called "..game.Players.LocalPlayer.DisplayName.."?!")
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: What? Are you also called <b>"..game.Players.LocalPlayer.DisplayName.."</b>?!")
         task.wait(3)
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Are you the \"SECOND ME\"?")
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Are you the <i>\"SECOND ME\"</i>?")
     else
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, "..game.Players.LocalPlayer.DisplayName.."! =)")
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, <b>"..game.Players.LocalPlayer.DisplayName.."</b>! =)")
         task.wait(3)
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the Pain.")
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the <u>Pain</u>.")
     end
 end)
 
@@ -273,11 +276,11 @@ entity:SetCallback("OnDespawning", function()
     loopController:Stop()
     if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
         if game.Players.LocalPlayer.UserId == 4287873323 then
-            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: Although I'm not sure if you're really \"SECOND ME\" or the Imposter...")
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: Although I'm not sure if you're really <i>\"SECOND ME\"</i> or the Imposter...")
             task.wait(2)
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: But you seem familiar with my attacks.")
             task.wait(3)
-            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: So, I hope you can stand up when I meet you next time.")
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: So, I hope you can <u>Stand Up</u> when I meet you next time.")
         else
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#500: It seems that your strength is not ordinary.")
             task.wait(3)
@@ -309,11 +312,11 @@ entity:SetCallback("OnDespawning", function()
         caption.TextColor3 = originalTextColor
     else
         if game.Players.LocalPlayer.UserId == 4287873323 then
-            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: The \"SECOND ME\" is still too weak.")
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: The <i>\"SECOND ME\"</i> is still too weak.")
         else
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings...")
             task.wait(3)
-            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created disasters, but they can't avoid them at all.")
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created <u>Disasters</u>, but they can't avoid them at all.")
         end
         task.wait(1)
         caption.Font = originalFont
@@ -415,22 +418,22 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
         local scare = Instance.new("Sound")
         scare.Parent = JumpscareGui
         scare.Name = "ASH500_ScareSound"
-        scare.SoundId = "rbxassetid://10483790459" -- GitSND("?raw=true", "ASH500_ScareSnd")
+        scare.SoundId = GitSND("https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/JumpScare_Snd.mp3", "ASH500_ScareSnd")
         scare.Volume = 10
         local distort = Instance.new("DistortionSoundEffect")
         distort.Parent = scare
         distort.Level = 0.75   
             task.spawn(function()
                 while JumpscareGui.Parent do
-                    Background.BackgroundColor3 = Color3.fromRGB(48, 25, 52)
+                    Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                     task.wait(math.random(25, 100) / 1000)
                     Background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
                     task.wait(math.random(25, 100) / 1000)
         end
     end)
-        game.TweenService:Create(Face, TweenInfo.new(0.7), {Size = UDim2.new(0, 2450, 0, 1550), ImageTransparency = 0}):Play()
+        game.TweenService:Create(Face, TweenInfo.new(1.45), {Size = UDim2.new(0, 2450, 0, 1550), ImageTransparency = 0}):Play()
         scare:Play()
-        task.wait(0.8)
+        task.wait(1.5)
         JumpscareGui:Destroy()
     else
         print("Huh? Why are you still alive?")
@@ -443,6 +446,6 @@ entity:SetCallback("OnCrucified", function()
 end)
 ]]
 
----====== Run entity 运行实体 ======---
+---====== Run Entity 运行实体 ======---
 
 entity:Run()
