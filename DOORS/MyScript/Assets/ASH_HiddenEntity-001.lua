@@ -142,7 +142,7 @@ local entity = spawner.Create({
     },
     Death = {
         Type = "Guiding", -- "Curious"
-        Hints = {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},
+        Hints = {"你死于Entity-001.", "他是象征铀元素的实体...\nASH_Uranium235!", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},
         Cause = "ASH_Uranium235"
     }
 })
@@ -181,7 +181,7 @@ for i = 1, 4 do
     label.Image = frameImages[i]
     label.ImageTransparency = 1
     label.BackgroundTransparency = 1
-    label.ZIndex = "-9999999999"
+    label.ZIndex = -9999999999
     label.Parent = radiationGui
     frameLabels[i] = label
 end
@@ -293,14 +293,14 @@ entity:SetCallback("OnSpawned", function()
     originalTextColor = caption.TextColor3
     caption.TextColor3 = Color3.fromRGB(132, 126, 132)
     caption.Font = Enum.Font.Kalam
-    if game.Players.LocalPlayer.UserId == 4287873323 then
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: What? Are you also called <mark color='#C6C6C6' transparency='0.75'>"..game.Players.LocalPlayer.DisplayName.."</mark>?!")
+    if game.Players.LocalPlayer.Character.Name == "China_ASH500" and game.Players.LocalPlayer.UserId == 4287873323 then
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: What? Are you also called <mark color='#FFFF00' transparency='0.75'>"..game.Players.LocalPlayer.DisplayName.."</mark>?!")
         task.wait(3)
         require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Are you the <b>\"SECOND ME\"</b>?")
     else
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, <mark color='#C6C6C6' transparency='0.75'>"..game.Players.LocalPlayer.DisplayName.."</mark>! =)")
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: I found you, <mark color='#FFFF00' transparency='0.75'>"..game.Players.LocalPlayer.DisplayName.."</mark>! =)")
         task.wait(3)
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the <u>Pain</u>.")
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Feel the <i>Pain</i>.")
     end
 end)
 
@@ -395,7 +395,7 @@ entity:SetCallback("OnStartMoving", function()
                         playerChar.RadiationEffect:Destroy()
                     end
                     game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
-                    firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于...##############?!", "你永远不会想知道那是什么东西", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="}, "Blue")
+                    firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于Entity-001.", "他是象征铀元素的实体...\nASH_Uranium235!", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="}, "Blue")
                     
                     if radiationActive then
                         radiationActive = false
@@ -481,7 +481,7 @@ entity:SetCallback("OnDespawning", function()
     local LeaveSnd = Instance.new("Sound", workspace)
     LeaveSnd.SoundId = GetGitSound("https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Assets/R%26D_Despawn_A-200.mp3", "LEAVING")
     LeaveSnd.Name = "ASH_Leaving"
-    LeaveSnd.Volume = 2
+    LeaveSnd.Volume = 3
     LeaveSnd.Ended:Connect(function()
         LeaveSnd:Destroy()
     end)
@@ -514,12 +514,14 @@ entity:SetCallback("OnDespawning", function()
     end
     
     if game:GetService("Players").LocalPlayer.Character.Humanoid.Health > 0 then
-        if game.Players.LocalPlayer.UserId == 4287873323 then
+        if game.Players.LocalPlayer.Character.Name == "China_ASH500" and game.Players.LocalPlayer.UserId == 4287873323 then
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#001: You seem <b>Familiar</b> with my attacks.")
+            task.wait(2)
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#001: And I seem to feel that we are <u>Attracted</u> to each other.")
             task.wait(3)
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#001: So, I hope you can <i>Stand Up</i> when I meet you next time.")
         else
-            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#001: It seems that your strength is not ordinary.")
+            require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#001: You are so <b>Special</b>, that you can avoid all my attacks.")
             task.wait(3)
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#001: I hope you can <i>Stand Up</i> when I meet you next time.")
         end
@@ -549,7 +551,7 @@ entity:SetCallback("OnDespawning", function()
         caption.Font = originalFont
         caption.TextColor3 = originalTextColor
     else
-        if game.Players.LocalPlayer.UserId == 4287873323 then
+        if game.Players.LocalPlayer.Character.Name == "China_ASH500" and game.Players.LocalPlayer.UserId == 4287873323 then
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: The <i>\"SECOND ME\"</i> is still too weak.")
         else
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: Weak human beings...")
@@ -581,9 +583,13 @@ entity:SetCallback("OnEnterRoom", function(room, firstTime)
     end
 end)
 
-entity:SetCallback("OnLookAt", function(lineOfSight) end)
+entity:SetCallback("OnLookAt", function(lineOfSight)
+    -- 什么都没有👽
+end)
 
-entity:SetCallback("OnRebounding", function(startOfRebound) end)
+entity:SetCallback("OnRebounding", function(startOfRebound)
+    -- 什么都没有👽
+end)
 
 entity:SetCallback("OnDespawned", function()
     print("emm...")
