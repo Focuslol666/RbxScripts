@@ -8,27 +8,19 @@ local MainUI = Player.PlayerGui.MainUI.MainFrame
 local PaintingNames = {"Painting_Small", "Painting_Big", "Painting_VeryBig", "Painting_Tall"}
 local Paintings = {
     {
-        ID = "Cat666",
+        ID = "Lavender",
         CanBeOn = {"Painting_Tall"},
-        PaintingMessage = '这幅画的标题叫"Lavender Cat".',
+        PaintingMessage = 'This painting is titled "Lavender Cat".',
         PaintingMessageDuration = 5,
-        PaintingImage = "https://github.com/Focuslol666/RbxScripts/blob/dbbc66b942b4b37bab6f45509950522360f6e045/DOORS/MyScript/Other/LavenderCat.png?raw=true",
+        PaintingImage = "https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/LavenderCat.png",
         Weight = 0.00000235
-    },
-    {
-        ID = "ASH500",
-        CanBeOn = {"Painting_Big", "Painting_VeryBig"},
-        PaintingMessage = '这幅画的标题叫"Fox On The Grassland".',
-        PaintingMessageDuration = 5,
-        PaintingImage = "https://github.com/Focuslol666/RbxScripts/blob/b6127fecfe53d9ff63b25e518114d55f4fe29853/DOORS/MyScript/Other/ASH_Glassland.png?raw=true",
-        Weight = 0.0235
     },
     {
         ID = "BlackHole",
         CanBeOn = {"Painting_Small"},
-        PaintingMessage = '这幅画似乎有生命迹象...',
+        PaintingMessage = 'This painting seems to have signs of life...',
         PaintingMessageDuration = 5,
-        PaintingImage = "https://github.com/Focuslol666/RbxScripts/blob/98e65d76ac18db4bb09710ebed0be54018076d36/DOORS/MyScript/Other/Void_BlackHole.png?raw=true",
+        PaintingImage = "https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/Void_BlackHole.png",
         Weight = 0.000235
     }
 }
