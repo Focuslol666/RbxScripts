@@ -1,10 +1,10 @@
--- Version: v0.96_Preview
+-- Version: v0.98_Preview
 -- Made by @FOCUSED_LIGHT (Scripter), @ASH_Uranium235 (Owner, Model Author) & @Nameless_MONSTER (Helper).
 
 --// 获取Github资源 //--
 
 function GetGitSound(GithubSnd, SoundName)
-    local url=GithubSnd
+    local url = GithubSnd
     if not isfile(SoundName..".mp3") then
 	    writefile(SoundName..".mp3", game:HttpGet(url))
 	end
@@ -13,63 +13,51 @@ end
 
 --// 实体生成前兆 //--
 
--- 颜色渐变
-local Lighting = game:GetService("Lighting")
-local RunService = game:GetService("RunService")
-local colorCorrection = Lighting:FindFirstChild("ColorCorrectionEffect")
-if not colorCorrection then
-    colorCorrection = Instance.new("ColorCorrectionEffect")
-    colorCorrection.Name = "Effect"
+-- 颜色矫正效果
+local function createColorCorrection(targetColor, fadeOutDuration, intensity)
+    local Lighting = game:GetService("Lighting")
+    local RunService = game:GetService("RunService")
+    
+    local colorCorrection = Instance.new("ColorCorrectionEffect")
+    colorCorrection.Name = "ColorCorrectionEffect"
     colorCorrection.Parent = Lighting
     colorCorrection.Enabled = true
-end
-local config = {
-    targetColor = Color3.fromRGB(255, 0, 0),
-    fadeInDuration = 0,
-    fadeOutDuration = 7,
-    intensity = 1
-}
-local currentIntensity = 0
-local timer = 0
-local isFadingIn = true
-local effectActive = true
-local function resetEffect()
-    colorCorrection.TintColor = Color3.new(1, 1, 1)
-end
-resetEffect()
-local function startFadeEffect()
+    
+    local currentIntensity = intensity
+    local timer = 0
+    local effectActive = true
+    
+    colorCorrection.TintColor = Color3.new(
+        1 - (1 - targetColor.R) * currentIntensity,
+        1 - (1 - targetColor.G) * currentIntensity,
+        1 - (1 - targetColor.B) * currentIntensity
+    )
+    
     local connection
     connection = RunService.Heartbeat:Connect(function(deltaTime)
         if not effectActive then
             connection:Disconnect()
             return
         end
+        
         timer += deltaTime
-        if isFadingIn then
-            local progress = timer / config.fadeInDuration
-            currentIntensity = math.min(progress * config.intensity, config.intensity)
-            if progress >= 1 then
-                timer = 0
-                isFadingIn = false
-            end
-        else
-            local progress = timer / config.fadeOutDuration
-            currentIntensity = math.max(config.intensity - (progress * config.intensity), 0)
-            if progress >= 1 then
-                effectActive = false
-                resetEffect()
-                connection:Disconnect()
-                return
-            end
-        end
+        local progress = timer / fadeOutDuration
+        currentIntensity = math.max(intensity - (progress * intensity), 0)
+        
         colorCorrection.TintColor = Color3.new(
-            1 - (1 - config.targetColor.R) * currentIntensity,
-            1 - (1 - config.targetColor.G) * currentIntensity,
-            1 - (1 - config.targetColor.B) * currentIntensity
+            1 - (1 - targetColor.R) * currentIntensity,
+            1 - (1 - targetColor.G) * currentIntensity,
+            1 - (1 - targetColor.B) * currentIntensity
         )
+        
+        if progress >= 1 then
+            effectActive = false
+            colorCorrection:Destroy()
+            connection:Disconnect()
+        end
     end)
 end
-startFadeEffect()
+createColorCorrection(Color3.fromRGB(255, 0, 0), 7, 1)
 -- 视角抖动
 local CameraShaker = require(game.ReplicatedStorage.CameraShaker)
 local camara = game.Workspace.CurrentCamera
@@ -97,8 +85,8 @@ local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 
 local entity = spawner.Create({
     Entity = {
-        Name = "ASH500",
-        Asset = "https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/ASH500.rbxm",
+        Name = "ASH_Uranium235",
+        Asset = "https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/ASH_Uranium235.rbxm",
         HeightOffset = 0
     },
     Lights = {
@@ -142,7 +130,7 @@ local entity = spawner.Create({
     },
     Death = {
         Type = "Guiding", -- "Curious"
-        Hints = {"你死于Entity-001.", "他是象征铀元素的实体...\nASH_Uranium235!", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},
+        Hints = {"你死于Entity-001.", "他是象征铀元素的实体...\nASH_Uranium235!", "尽快躲藏, 不要逃跑.", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="},
         Cause = "ASH_Uranium235"
     }
 })
@@ -191,6 +179,11 @@ local frameTimer = 0
 local frameDuration = 0.01
 local animationActive = false
 
+-- 创建辐射效果图像
+local radiationEffectImage = nil
+local colorTween = nil
+local isRadiationActive = false
+
 -- 故障屏幕GUI设置
 local distanceThresholds = {
     {distance = 60, transparency = 0.25},
@@ -201,9 +194,9 @@ local distanceThresholds = {
 
 -- 聚光灯旋转
 local function SpotlightRotation(speed)
-    local part1 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[14].Weld["SpotLight-A"]
-    local part2 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[14].Weld["SpotLight-B"]
-    local part3 = workspace.ASH500["ASH_Uranium235(Entity-001)"]:GetChildren()[14].Weld["SpotLight-C"]
+    local part1 = workspace.ASH_Uranium235["Entity-001"]:GetChildren()[14].Weld["SpotLight-A"]
+    local part2 = workspace.ASH_Uranium235["Entity-001"]:GetChildren()[14].Weld["SpotLight-B"]
+    local part3 = workspace.ASH_Uranium235["Entity-001"]:GetChildren()[14].Weld["SpotLight-C"]
     local rotationSpeed = speed or 1
     local RunService = game:GetService("RunService")
     local connection
@@ -250,10 +243,23 @@ entity:SetCallback("OnSpawned", function()
     radiationGui.Enabled = true
     animationActive = true
     
+    -- 创建辐射效果图像
+    local effectsFrame = game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.Healthbar.Effects
+    local wetImage = effectsFrame:FindFirstChild("Wet")
+    
+    if wetImage then
+        radiationEffectImage = wetImage:Clone()
+        radiationEffectImage.Name = "Radiation"
+        radiationEffectImage.Image = "rbxassetid://133145488179887"
+        radiationEffectImage.ImageColor3 = Color3.fromRGB(255, 131, 115)
+        radiationEffectImage.Visible = false
+        radiationEffectImage.Parent = effectsFrame
+    end
+    
     local Lighting = game:GetService("Lighting")
     local atmosphere = Instance.new("Atmosphere")
     atmosphere.Parent = Lighting
-    atmosphere.Name = "ASH500_Aftermath"
+    atmosphere.Name = "ASH_Aftermath"
     atmosphere.Density = 0
     atmosphere.Offset = -1
     atmosphere.Haze = 0
@@ -275,7 +281,7 @@ entity:SetCallback("OnSpawned", function()
     task.spawn(function()
         task.wait(500)
         local fadeTweenInfo = TweenInfo.new(
-            10,
+            20,
             Enum.EasingStyle.Quint,
             Enum.EasingDirection.Out
         )
@@ -317,6 +323,35 @@ entity:SetCallback("OnStartMoving", function()
     local radiationActive = true
     local lastTransparency = 0
     
+    -- 启动辐射效果动画
+    isRadiationActive = true
+    local baseColor = Color3.fromRGB(255, 131, 115)
+    local targetColor = Color3.fromRGB(255, 255, 255)
+    local tweenService = game:GetService("TweenService")
+    
+    local function animateRadiationEffect()
+        while isRadiationActive and radiationEffectImage do
+            -- 淡入到白色
+            colorTween = tweenService:Create(radiationEffectImage, TweenInfo.new(0.3), {
+                ImageColor3 = targetColor
+            })
+            colorTween:Play()
+            colorTween.Completed:Wait()
+            
+            if not isRadiationActive then break end
+            
+            -- 淡出到基础色
+            colorTween = tweenService:Create(radiationEffectImage, TweenInfo.new(0.3), {
+                ImageColor3 = baseColor
+            })
+            colorTween:Play()
+            colorTween.Completed:Wait()
+        end
+    end
+    
+    -- 启动动画协程
+    task.spawn(animateRadiationEffect)
+    
     coroutine.wrap(function()
         local RunService = game:GetService("RunService")
         local damageTimers = {}
@@ -327,7 +362,7 @@ entity:SetCallback("OnStartMoving", function()
         local damageConnection
         damageConnection = RunService.Heartbeat:Connect(function(deltaTime)
             local entityExists, mainModel = pcall(function()
-                return workspace:FindFirstChild("ASH500")
+                return workspace:FindFirstChild("ASH_Uranium235")
             end)
             
             if not entityExists or not mainModel then
@@ -357,7 +392,7 @@ entity:SetCallback("OnStartMoving", function()
                 local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
                 if not humanoid or humanoid.Health <= 0 then return end
                 
-                local entityModel = workspace.ASH500:FindFirstChild("ASH_Uranium235(Entity-001)")
+                local entityModel = workspace.ASH_Uranium235:FindFirstChild("Entity-001")
                 local playerChar = game.Players.LocalPlayer.Character
                 
                 if entityModel and playerChar then
@@ -386,6 +421,15 @@ entity:SetCallback("OnStartMoving", function()
                             end
                         end
                     end
+                    
+                    -- 控制辐射效果图像的可见性
+                    if radiationEffectImage then
+                        if inAnyCircle and humanoid.Health > 0 then
+                            radiationEffectImage.Visible = true
+                        else
+                            radiationEffectImage.Visible = false
+                        end
+                    end
                 end
                 
                 if humanoid.Health <= 0 then
@@ -395,7 +439,7 @@ entity:SetCallback("OnStartMoving", function()
                         playerChar.RadiationEffect:Destroy()
                     end
                     game:GetService("ReplicatedStorage").GameStats["Player_".. game.Players.LocalPlayer.Name].Total.DeathCause.Value = "ASH_Uranium235"
-                    firesignal(game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent, {"你死于Entity-001.", "他是象征铀元素的实体...\nASH_Uranium235!", "尽快躲藏, 不要逃跑", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="}, "Blue")
+                    firesignal(game:GetService("ReplicatedStorage").RemotesFolder.DeathHint.OnClientEvent, {"你死于Entity-001.", "他是象征铀元素的实体...\nASH_Uranium235!", "尽快躲藏, 不要逃跑.", "WU9VIENBTiBORVZFUiBFU0NBUEUhISE="}, 'Blue')
                     
                     if radiationActive then
                         radiationActive = false
@@ -418,59 +462,23 @@ entity:SetCallback("OnDespawning", function()
     print("Goodbye.")
     animationActive = false
     
-    if not colorCorrection then
-        colorCorrection = Instance.new("ColorCorrectionEffect")
-        colorCorrection.Name = "LeavingEffect"
-        colorCorrection.Parent = Lighting
-        colorCorrection.Enabled = true
+    -- 停止辐射效果动画
+    isRadiationActive = false
+    
+    -- 取消正在进行的Tween
+    if colorTween then
+        colorTween:Cancel()
+        colorTween = nil
     end
-    local config = {
-        targetColor = Color3.fromRGB(255, 255, 0),
-        fadeInDuration = 0,
-        fadeOutDuration = 7,
-        intensity = 0.6
-    }
-    local currentIntensity = 0
-    local timer = 0
-    local isFadingIn = true
-    local effectActive = true
-    local function resetEffect()
-        colorCorrection.TintColor = Color3.new(1, 1, 1)
+    
+    -- 隐藏并销毁辐射效果图像
+    if radiationEffectImage then
+        radiationEffectImage.Visible = false
+        radiationEffectImage:Destroy()
+        radiationEffectImage = nil
     end
-    resetEffect()
-    local function startFadeEffect()
-        local connection
-        connection = RunService.Heartbeat:Connect(function(deltaTime)
-            if not effectActive then
-                connection:Disconnect()
-                return
-            end
-            timer += deltaTime
-            if isFadingIn then
-                local progress = timer / config.fadeInDuration
-                currentIntensity = math.min(progress * config.intensity, config.intensity)
-                if progress >= 1 then
-                    timer = 0
-                    isFadingIn = false
-                end
-            else
-                local progress = timer / config.fadeOutDuration
-                currentIntensity = math.max(config.intensity - (progress * config.intensity), 0)
-                if progress >= 1 then
-                    effectActive = false
-                    resetEffect()
-                    connection:Disconnect()
-                    return
-                end
-            end
-            colorCorrection.TintColor = Color3.new(
-                1 - (1 - config.targetColor.R) * currentIntensity,
-                1 - (1 - config.targetColor.G) * currentIntensity,
-                1 - (1 - config.targetColor.B) * currentIntensity
-            )
-        end)
-    end
-    startFadeEffect()
+    
+    createColorCorrection(Color3.fromRGB(255, 255, 0), 7, 0.6)
     local CameraShaker = require(game.ReplicatedStorage.CameraShaker)
     local camara = game.Workspace.CurrentCamera
     local camShake = CameraShaker.new(Enum.RenderPriority.Camera.Value, function(shakeCf)
@@ -489,7 +497,7 @@ entity:SetCallback("OnDespawning", function()
     if connection then
         connection:Disconnect()
     end
-    workspace.ASH500["ASH_Uranium235(Entity-001)"].Attachment.BillboardGui.AlwaysOnTop = false
+    workspace.ASH_Uranium235["Entity-001"].Attachment.BillboardGui.AlwaysOnTop = false
     loopController:Stop()
     
     if radiationGui and radiationGui.Parent then
@@ -568,8 +576,8 @@ entity:SetCallback("OnEnterRoom", function(room, firstTime)
     local latestRoom = game:GetService("ReplicatedStorage").GameData.LatestRoom.Value
     local prevRoom = latestRoom - 1
     
-    if workspace.ASH500 and workspace.ASH500:FindFirstChild("ASH_Uranium235(Entity-001)") then
-        local entityModel = workspace.ASH500["ASH_Uranium235(Entity-001)"]
+    if workspace.ASH_Uranium235 and workspace.ASH_Uranium235:FindFirstChild("Entity-001") then
+        local entityModel = workspace.ASH_Uranium235["Entity-001"]
         if entityModel and entityModel:FindFirstChild("Attachment") then
             local billboard = entityModel.Attachment:FindFirstChild("BillboardGui")
             if billboard then
@@ -632,7 +640,7 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
         Background.BorderSizePixel = 0
         Background.Size = UDim2.new(1, 0, 1, 0)
         Background.ZIndex = 9999
-        Face.Name = "ASH500_ScareFace"
+        Face.Name = "ASH_ScareFace"
         Face.AnchorPoint = Vector2.new(0.5, 0.5)
         Face.BackgroundTransparency = 1
         Face.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -643,8 +651,8 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
         Face.Parent = Background
         local scare = Instance.new("Sound")
         scare.Parent = JumpscareGui
-        scare.Name = "ASH500_ScareSound"
-        scare.SoundId = GetGitSound("https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/JumpScare_Snd.mp3", "ASH500_ScareSnd")
+        scare.Name = "ASH_ScareSound"
+        scare.SoundId = GetGitSound("https://github.com/Focuslol666/RbxScripts/raw/main/DOORS/MyScript/Other/JumpScare_Snd.mp3", "SCARE")
         scare.Volume = 10
         local distort = Instance.new("DistortionSoundEffect")
         distort.Parent = scare
