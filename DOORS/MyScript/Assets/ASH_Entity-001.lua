@@ -180,7 +180,7 @@ local frameDuration = 0.01
 local animationActive = false
 
 -- 创建辐射效果图像
-local radiationEffectImage = nil
+local radiationEffect = nil
 local colorTween = nil
 local isRadiationActive = false
 
@@ -248,12 +248,12 @@ entity:SetCallback("OnSpawned", function()
     local wetImage = effectsFrame:FindFirstChild("Wet")
     
     if wetImage then
-        radiationEffectImage = wetImage:Clone()
-        radiationEffectImage.Name = "Radiation"
-        radiationEffectImage.Image = "rbxassetid://133145488179887"
-        radiationEffectImage.ImageColor3 = Color3.fromRGB(255, 131, 115)
-        radiationEffectImage.Visible = false
-        radiationEffectImage.Parent = effectsFrame
+        radiationEffect = wetImage:Clone()
+        radiationEffect.Name = "Radiation"
+        radiationEffect.Image = "rbxassetid://133145488179887"
+        radiationEffect.ImageColor3 = Color3.fromRGB(255, 131, 115)
+        radiationEffect.Visible = false
+        radiationEffect.Parent = effectsFrame
     end
     
     local Lighting = game:GetService("Lighting")
@@ -330,9 +330,9 @@ entity:SetCallback("OnStartMoving", function()
     local tweenService = game:GetService("TweenService")
     
     local function animateRadiationEffect()
-        while isRadiationActive and radiationEffectImage do
+        while isRadiationActive and radiationEffect do
             -- 淡入到白色
-            colorTween = tweenService:Create(radiationEffectImage, TweenInfo.new(0.3), {
+            colorTween = tweenService:Create(radiationEffect, TweenInfo.new(0.3), {
                 ImageColor3 = targetColor
             })
             colorTween:Play()
@@ -341,7 +341,7 @@ entity:SetCallback("OnStartMoving", function()
             if not isRadiationActive then break end
             
             -- 淡出到基础色
-            colorTween = tweenService:Create(radiationEffectImage, TweenInfo.new(0.3), {
+            colorTween = tweenService:Create(radiationEffect, TweenInfo.new(0.3), {
                 ImageColor3 = baseColor
             })
             colorTween:Play()
@@ -423,11 +423,11 @@ entity:SetCallback("OnStartMoving", function()
                     end
                     
                     -- 控制辐射效果图像的可见性
-                    if radiationEffectImage then
+                    if radiationEffect then
                         if inAnyCircle and humanoid.Health > 0 then
-                            radiationEffectImage.Visible = true
+                            radiationEffect.Visible = true
                         else
-                            radiationEffectImage.Visible = false
+                            radiationEffect.Visible = false
                         end
                     end
                 end
@@ -472,10 +472,10 @@ entity:SetCallback("OnDespawning", function()
     end
     
     -- 隐藏并销毁辐射效果图像
-    if radiationEffectImage then
-        radiationEffectImage.Visible = false
-        radiationEffectImage:Destroy()
-        radiationEffectImage = nil
+    if radiationEffect then
+        radiationEffect.Visible = false
+        radiationEffect:Destroy()
+        radiationEffect = nil
     end
     
     createColorCorrection(Color3.fromRGB(255, 255, 0), 7, 0.6)
@@ -533,7 +533,7 @@ entity:SetCallback("OnDespawning", function()
             task.wait(3)
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("#001: I hope you can <i>Stand Up</i> when I meet you next time.")
         end
-        task.wait()
+        task.wait(1)
         
 ---====== Load achievement giver ======---
 
@@ -543,7 +543,9 @@ entity:SetCallback("OnDespawning", function()
         local achievementTitle = "Evil Radiation"
         if not _G.achievementLock[achievementTitle] then
             local achievementGiver = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Custom%20Achievements/Source.lua"))()
+            
 ---====== Display achievement ======---
+            
             achievementGiver({
                 Title = achievementTitle,
                 Desc = "Enduring the pain caused by Radiation.",
@@ -555,6 +557,7 @@ entity:SetCallback("OnDespawning", function()
         else
             warn(achievementTitle.." achievement has been unlocked.")
         end
+        
         task.wait(1)
         caption.Font = originalFont
         caption.TextColor3 = originalTextColor
@@ -566,7 +569,7 @@ entity:SetCallback("OnDespawning", function()
             task.wait(3)
             require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("???: They created <u>Disasters</u>, but they can't avoid them at all.")
         end
-        task.wait(1)
+        task.wait()
         caption.Font = originalFont
         caption.TextColor3 = originalTextColor
     end
@@ -657,18 +660,23 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
         local distort = Instance.new("DistortionSoundEffect")
         distort.Parent = scare
         distort.Level = 0.75   
-            task.spawn(function()
-                while JumpscareGui.Parent do
-                    Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                    task.wait(math.random(25, 100) / 1000)
-                    Background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                    task.wait(math.random(25, 100) / 1000)
-        end
-    end)
-        game.TweenService:Create(Face, TweenInfo.new(2), {Size = UDim2.new(0, 2450, 0, 1550), ImageTransparency = 0}):Play()
+        task.spawn(function()
+            while JumpscareGui.Parent do
+                Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                task.wait(math.random(25, 100) / 1000)
+                Background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                task.wait(math.random(25, 100) / 1000)
+            end
+        end)
+        local faceTween = game:GetService("TweenService"):Create(Face, TweenInfo.new(2), {
+            Size = UDim2.new(0, 2450, 0, 1550),
+            ImageTransparency = 0
+        })
+        faceTween:Play()
         scare:Play()
         task.wait(2)
         JumpscareGui:Destroy()
+        
         radiationGui:Destroy()
     else
         print("Huh? Why are you still alive?")
@@ -676,8 +684,51 @@ entity:SetCallback("OnDamagePlayer", function(newHealth)
 end)
 
 --[[
-entity:SetCallback("OnCrucified", function()
-    print("Shit Fuck!") -- 但是你永远无法触发此回调💀💀💀
+entity:SetCallback("OnCrucified", function() -- 但是你永远无法触发此回调💀💀💀
+    print("Shit Fuck!")
+    task.wait(13)
+    
+---====== Load achievement giver ======---
+
+    if not _G.Crucifix_achievementLock then
+        _G.Crucifix_achievementLock = {}
+    end
+    local Crucifix_achievementTitle = "Crucifix Achievement Title" -- 占位符🧐
+    if not _G.Crucifix_achievementLock[Crucifix_achievementTitle] then
+        local achievementGiver = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Custom%20Achievements/Source.lua"))()
+        
+---====== Display achievement ======---
+        
+        achievementGiver({
+            Title = Crucifix_achievementTitle,
+            Desc = "Crucifix Achievement Desc", -- 占位符🧐
+            Reason = "Use a Crucifix against rare Entity called ASH_Uranium235.",
+            Image = "rbxassetid://1145141919810" -- 占位符🧐
+        })    
+        _G.Crucifix_achievementLock[Crucifix_achievementTitle] = true
+        print(Crucifix_achievementTitle.." achievement unlocked and given!")
+    else
+        warn(Crucifix_achievementTitle.." achievement has been unlocked.")
+    end
+    
+    task.wait()
+    if loopController then
+        loopController:Stop()
+    end
+    if radiationGui and radiationGui.Parent then
+        radiationGui:Destroy()
+    end
+    animationActive = false
+    isRadiationActive = false
+    if colorTween then
+        colorTween:Cancel()
+        colorTween = nil
+    end
+    if radiationEffect then
+        radiationEffect.Visible = false
+        radiationEffect:Destroy()
+        radiationEffect = nil
+    end
 end)
 ]]
 
