@@ -169,7 +169,7 @@ for i = 1, 4 do
     label.Image = frameImages[i]
     label.ImageTransparency = 1
     label.BackgroundTransparency = 1
-    label.ZIndex = -9999999999
+    label.ZIndex = -999999999999999
     label.Parent = radiationGui
     frameLabels[i] = label
 end
