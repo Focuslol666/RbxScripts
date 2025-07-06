@@ -573,8 +573,8 @@ entity:SetCallback("OnDespawning", function()
 end)
 
 entity:SetCallback("OnEnterRoom", function(room, firstTime)
-    local latestRoom = game:GetService("ReplicatedStorage").GameData.LatestRoom.Value
-    local prevRoom = latestRoom - 1
+    local currentRoom = game:GetService("Players").LocalPlayer:GetAttribute("CurrentRoom")
+    local prevRoom = currentRoom - 1
     
     if workspace.ASH_Uranium235 and workspace.ASH_Uranium235:FindFirstChild("Entity-001") then
         local entityModel = workspace.ASH_Uranium235["Entity-001"]
@@ -582,7 +582,7 @@ entity:SetCallback("OnEnterRoom", function(room, firstTime)
             local billboard = entityModel.Attachment:FindFirstChild("BillboardGui")
             if billboard then
                 local roomNum = tonumber(room.Name)
-                local shouldShow = (roomNum == latestRoom) or (roomNum == prevRoom)
+                local shouldShow = (roomNum == currentRoom) or (roomNum == prevRoom)
                 
                 billboard.AlwaysOnTop = shouldShow
                 
