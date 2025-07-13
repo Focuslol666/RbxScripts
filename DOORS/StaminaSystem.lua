@@ -1,7 +1,8 @@
 --[[
 Stamina System for DOORS.
-Made by FOCUS (@Focuslol666)
-This script is Beta Version, and there may be some bugs.
+Made by FOCUSED_LIGHT (@Focuslol666).
+Version: v1_Alpha.
+This script is Alpha Version, and there may be some bugs.
 
 PC: Press the 'Q' Key to Sprint.
 Mobile: Press the Button to Sprint.
@@ -20,7 +21,7 @@ local ExecCaptions = {
     "Stamina System executed successfully!",
     "Made by @FOCUSED_LIGHT.",
     "Press the 'Q' Key or the Button to Sprint.",
-    "This script is Beta Version, and there may be some bugs.",
+    "This script is Alpha Version, and there may be some bugs.",
     "Fuck @DY Film_A-101! Film_A-101's parents are dead."
 }
 if player.UserId == 4044271400 or player.UserId == 4287873323 or player.UserId == 7208141087 then
@@ -42,6 +43,12 @@ local sprintButton
 
 local infiniteStaminaEnabled = false
 local infiniteStaminaToggle
+
+local originalDrainRate = STAMINA_DRAIN_RATE
+local originalRecoverRate = STAMINA_RECOVER_RATE
+local isVitaminEffectActive = false
+local vitaminSound
+local vitaminDetectionEnabled = true
 
 local mainUI = player:WaitForChild("PlayerGui"):WaitForChild("MainUI")
 local mainGame = mainUI.Initiator.Main_Game
@@ -81,7 +88,7 @@ if player.UserId == 4044271400 or player.UserId == 4287873323 or player.UserId =
         infiniteStaminaEnabled = not infiniteStaminaEnabled
         if infiniteStaminaEnabled then
             infiniteStaminaToggle.BackgroundColor3 = Color3.fromRGB(255, 222, 189)
-            infiniteStaminaToggle.TextColor3 = Color3.fromRGB(0, 0, 0)
+            infiniteStaminaToggle.TextColor3 = Color3.fromRGB(50, 40, 30)
             infiniteStaminaToggle.Text = "ON"
             require(mainGame).caption("Infinite Stamina: ON")
         else
@@ -90,6 +97,8 @@ if player.UserId == 4044271400 or player.UserId == 4287873323 or player.UserId =
             infiniteStaminaToggle.Text = "OFF"
             require(mainGame).caption("Infinite Stamina: OFF")
         end
+        
+        updateStaminaBar()
     end)
     
     staminaBarPosition = UDim2.new(0.75, 0, 0.95, 0)
@@ -112,6 +121,20 @@ bar.BackgroundColor3 = Color3.fromRGB(255, 222, 189)
 bar.BorderSizePixel = 0
 bar.AnchorPoint = Vector2.new(0, 0)
 bar.Parent = background
+
+local staminaText = Instance.new("TextLabel")
+staminaText.Name = "StaminaText"
+staminaText.Size = UDim2.new(0.1, 0, 0.03, 0)
+staminaText.Position = staminaBarPosition + UDim2.new(-0.11, 0, 0, 0)
+staminaText.BackgroundTransparency = 1
+staminaText.Text = string.format("%d%%", stamina)
+staminaText.Font = Enum.Font.Oswald
+staminaText.TextSize = 16
+staminaText.TextColor3 = Color3.fromRGB(255, 222, 189)
+staminaText.TextStrokeTransparency = 0
+staminaText.TextStrokeColor3 = Color3.fromRGB(50, 40, 30)
+staminaText.TextXAlignment = Enum.TextXAlignment.Right
+staminaText.Parent = screenGui
 
 local exhaustionOverlay = Instance.new("Frame")
 exhaustionOverlay.Name = "ExhaustionOverlay"
@@ -137,7 +160,7 @@ if UserInputService.TouchEnabled then
     local buttonSize = 0.10
     sprintButton.Size = UDim2.new(buttonSize, 0, buttonSize, 0)
     
-    sprintButton.Position = UDim2.new(0.94, 0, 0.5, 0)
+    sprintButton.Position = UDim2.new(0.9, 0, 0.5, 0)
     sprintButton.AnchorPoint = Vector2.new(0.5, 0.5)
     
     sprintButton.Text = "Sprint"
@@ -146,7 +169,7 @@ if UserInputService.TouchEnabled then
     
     sprintButton.TextScaled = true
     
-    sprintButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+    sprintButton.TextColor3 = Color3.fromRGB(50, 40, 30)
     sprintButton.BackgroundColor3 = Color3.fromRGB(255, 222, 189)
     
     local corner = Instance.new("UICorner")
@@ -178,6 +201,14 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 local function updateStaminaBar()
+    if infiniteStaminaEnabled then
+        staminaText.Text = "Infinity%"
+        staminaText.TextColor3 = Color3.fromRGB(255, 222, 189)
+        bar.Size = UDim2.new(1, 0, 1, 0)
+        bar.BackgroundColor3 = Color3.fromRGB(255, 222, 189)
+        return
+    end
+    
     local percent = stamina / MAX_STAMINA
     
     bar.Size = UDim2.new(percent, 0, 1, 0)
@@ -195,13 +226,21 @@ local function updateStaminaBar()
         
         bar.BackgroundColor3 = Color3.fromRGB(r, g, b)
     end
+    
+    staminaText.Text = string.format("%d%%", math.floor(stamina))
+    
+    if stamina <= 20 then
+        staminaText.TextColor3 = Color3.fromRGB(255, 0, 0)
+    else
+        staminaText.TextColor3 = Color3.fromRGB(255, 222, 189)
+    end
 end
 
 local exhaustSound = Instance.new("Sound")
 exhaustSound.SoundId = EXHAUSTED_SOUND_ID
 exhaustSound.Looped = true
 exhaustSound.Volume = 0.8
-exhaustSound.Parent = player:FindFirstChild("PlayerGui") or player.PlayerGui -- or Workspace
+exhaustSound.Parent = player:FindFirstChild("PlayerGui") or workspace
 
 local function triggerExhaustionEffect()
     local fadeIn = TweenService:Create(
@@ -220,6 +259,108 @@ local function triggerExhaustionEffect()
     )
     fadeOut:Play()
 end
+
+local function activateVitaminEffect()
+    if infiniteStaminaEnabled or isVitaminEffectActive then
+        print("Vitamin effect skipped - Infinite stamina enabled or effect already active")
+        return
+    end
+    
+    isVitaminEffectActive = true
+    print("Vitamin effect activated")
+    
+    local savedDrainRate = STAMINA_DRAIN_RATE
+    local savedRecoverRate = STAMINA_RECOVER_RATE
+    
+    STAMINA_DRAIN_RATE = MAX_STAMINA / 15
+    STAMINA_RECOVER_RATE = MAX_STAMINA / 10
+    
+    humanoid.Health = math.min(humanoid.Health + 30, humanoid.MaxHealth)
+    require(mainGame).caption("You feel a powerful force coming at you...")
+    print("Vitamin boost activated!")
+    
+    vitaminSound = Instance.new("Sound")
+    vitaminSound.SoundId = "rbxassetid://5948090748"
+    vitaminSound.Volume = 5
+    vitaminSound.Looped = true
+    vitaminSound.Parent = workspace
+    vitaminSound:Play()
+    
+    local effectDuration = 30
+    local startTime = os.clock()
+    
+    while os.clock() - startTime < effectDuration and humanoid.Health > 0 do
+        RunService.Heartbeat:Wait()
+    end
+    
+    if vitaminSound then
+        vitaminSound:Stop()
+        vitaminSound:Destroy()
+        vitaminSound = nil
+    end
+    
+    if humanoid.Health > 0 then
+        stamina = 0
+        isSprinting = false
+        isExhausted = true
+        updateStaminaBar()
+        
+        humanoid.Health = math.max(humanoid.Health - 10, 0)
+        print("Vitamin effect ended!")
+        
+        if sprintButton then
+            sprintButton.BackgroundColor3 = Color3.fromRGB(128, 128, 128)
+        end
+        speedBoostEffect.Visible = false
+        STAMINA_DRAIN_RATE = savedDrainRate
+        STAMINA_RECOVER_RATE = savedRecoverRate * 0.7
+        
+        task.wait(5)
+        isExhausted = false
+        
+        while stamina < MAX_STAMINA and humanoid.Health > 0 do
+            RunService.Heartbeat:Wait()
+        end
+        
+        STAMINA_RECOVER_RATE = savedRecoverRate
+        print("Stamina fully recovered")
+    end
+    
+    isVitaminEffectActive = false
+    print("Vitamin effect ended")
+end
+
+local function continuousVitaminDetection()
+    while vitaminDetectionEnabled do
+        local vitaminsFolder
+        while vitaminDetectionEnabled and (not vitaminsFolder or not vitaminsFolder:IsDescendantOf(workspace)) do
+            vitaminsFolder = workspace:FindFirstChild(character.Name)
+            task.wait(1)
+        end
+        
+        if vitaminsFolder then
+            local vitamins = vitaminsFolder:FindFirstChild("Vitamins")
+            
+            if vitamins then
+                local attributeConnection = vitamins:GetAttributeChangedSignal("CannotDrop"):Connect(function()
+                    if vitamins:GetAttribute("CannotDrop") == true then
+                        print("Vitamin CannotDrop attribute changed to true")
+                        activateVitaminEffect()
+                    end
+                end)
+                
+                if vitamins:GetAttribute("CannotDrop") == true then
+                    print("Vitamin CannotDrop attribute is already true")
+                    activateVitaminEffect()
+                end
+            end
+        end
+        
+        task.wait(1)
+    end
+end
+
+coroutine.wrap(continuousVitaminDetection)()
 
 RunService.Heartbeat:Connect(function(dt)
     if not character or not character:FindFirstChild("Humanoid") then
@@ -304,6 +445,15 @@ player.CharacterAdded:Connect(function(newChar)
     if sprintButton then
         sprintButton.BackgroundColor3 = Color3.fromRGB(255, 222, 189)
     end
+    
+    updateStaminaBar()
+    
+    isVitaminEffectActive = false
+    if vitaminSound then
+        vitaminSound:Stop()
+        vitaminSound:Destroy()
+        vitaminSound = nil
+    end
 end)
 
 updateStaminaBar()
@@ -314,3 +464,7 @@ for _, Text in ipairs(ExecCaptions) do
     require(mainGame).caption(Text, true)
     task.wait(2.5)
 end
+
+game:BindToClose(function()
+    vitaminDetectionEnabled = false
+end)
