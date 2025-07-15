@@ -1,4 +1,4 @@
-_G.CHANGE_GUIDING-LIGHT = true -- enabled for debugging purposes only.
+_G.CHANGE_GUIDING_LIGHT = true -- enabled for debugging purposes only.
 
 local Players = game:GetService("Players")
 local SoundService = game:GetService("SoundService")
@@ -39,7 +39,7 @@ end
 
 Camera.ChildAdded:Connect(function(Child)
     if Child.Name ~= DeathName then return end
-    if not _G.CHANGE_GUIDING-LIGHT then return end
+    if not _G.CHANGE_GUIDING_LIGHT then return end
 
     for _, Asset in Music:GetChildren() do
         if Asset:IsA("Sound") then
