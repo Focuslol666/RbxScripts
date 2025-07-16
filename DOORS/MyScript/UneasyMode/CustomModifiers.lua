@@ -1,3 +1,5 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 local EndMusicF1 = player.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Cutscenes.Elevator1.EndMusic
 local EndMusicF2 = game:GetService("ReplicatedStorage").FloorReplicated.MinesFinale.EndMusic
 
