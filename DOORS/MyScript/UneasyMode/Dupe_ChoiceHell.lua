@@ -54,13 +54,11 @@ local function processRoomSigns(roomNumber)
     local room = workspace.CurrentRooms:FindFirstChild(tostring(roomNumber))
     if not room then return end
     
-    -- 处理主门牌
     local mainDoorSign = room:FindFirstChild("Door") and room.Door:FindFirstChild("Sign")
     if mainDoorSign then
         processTextObjects(mainDoorSign)
     end
     
-    -- 处理假门牌 (根据开关决定行为)
     local sideroomDupe = room:FindFirstChild("SideroomDupe")
     local fakeDoorSign = sideroomDupe and sideroomDupe:FindFirstChild("DoorFake") and sideroomDupe.DoorFake:FindFirstChild("Sign")
     
