@@ -9,6 +9,7 @@ else
     player.PlayerGui.MainUI.Statistics.Death.Visible = true
 end
 
+player.PlayerGui.TopbarUI.Topbar.Modifiers.ZIndex = 99999
 player.PlayerGui.TopbarUI.Topbar.Modifiers.Visible = true
 player.PlayerGui.TopbarUI.Topbar.Modifiers.Text = "99"
 
