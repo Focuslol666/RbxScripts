@@ -1,9 +1,8 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local EndMusicF1 = player.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Cutscenes.Elevator1.EndMusic
-local EndMusicF2 = game:GetService("ReplicatedStorage").FloorReplicated.MinesFinale.EndMusic
 
-if EndMusicF1.Playing or EndMusicF2.Playing then
+if EndMusicF1.Playing then
     player.PlayerGui.MainUI.Statistics.Death.Visible = false
     player.PlayerGui.MainUI.Statistics.EscapedModifier.Visible = true
 else
