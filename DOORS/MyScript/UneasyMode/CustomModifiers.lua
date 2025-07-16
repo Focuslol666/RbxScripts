@@ -31,17 +31,5 @@ player.PlayerGui.MainUI.Modifiers.Tip.Text = "Uneasy Mode executed successfully!
 player.PlayerGui.MainUI.Modifiers.NotFloor.IconLeft.Image = "rbxassetid://86723498355069"
 player.PlayerGui.MainUI.Modifiers.NotFloor.Text = "NO REVIVES"
 
-if Toggles.NoRevives.Value then
-    player.PlayerGui.MainUI.Modifiers.NotFloor.Visible = true
-else
-    player.PlayerGui.MainUI.Modifiers.NotFloor.Visible = false
-end
-
-if Toggles.DisabledRift.Value then
-    player.PlayerGui.MainUI.Modifiers.NoRift.Visible = true
-else
-    player.PlayerGui.MainUI.Modifiers.NoRift.Visible = false
-end
-
 task.wait(6)
 player.PlayerGui.MainUI.Modifiers.Visible = false
