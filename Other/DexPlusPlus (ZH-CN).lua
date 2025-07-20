@@ -15060,7 +15060,7 @@ Main = (function()
 	Main.CreateMainGui = function()
 		local gui = create({
 			{1,"ScreenGui",{IgnoreGuiInset=true,Name="MainMenu",}},
-			{2,"TextButton",{AnchorPoint=Vector2.new(0.5,0),AutoButtonColor=false,BackgroundColor3=Color3.new(0.17647059261799,0.17647059261799,0.17647059261799),BorderSizePixel=0,Font=4,Name="OpenButton",Parent={1},Position=UDim2.new(0.5,0,0,2),Size=UDim2.new(0,55,0,32),Text="Dex++ [ZH-CN]",TextColor3=Color3.new(1,1,1),TextSize=16,TextTransparency=0.20000000298023,}},
+			{2,"TextButton",{AnchorPoint=Vector2.new(0.5,0),AutoButtonColor=false,BackgroundColor3=Color3.new(0.17647059261799,0.17647059261799,0.17647059261799),BorderSizePixel=0,Font=4,Name="OpenButton",Parent={1},Position=UDim2.new(0.5,0,0,2),Size=UDim2.new(0,66,0,32),Text="Dex++ [ZH-CN]",TextColor3=Color3.new(1,1,1),TextSize=16,TextTransparency=0.20000000298023,}},
 			{3,"UICorner",{CornerRadius=UDim.new(0,4),Parent={2},}},
 			{4,"Frame",{AnchorPoint=Vector2.new(0.5,0),BackgroundColor3=Color3.new(0.17647059261799,0.17647059261799,0.17647059261799),ClipsDescendants=true,Name="MainFrame",Parent={2},Position=UDim2.new(0.5,0,1,-4),Size=UDim2.new(0,224,0,200),}},
 			{5,"UICorner",{CornerRadius=UDim.new(0,4),Parent={4},}},
