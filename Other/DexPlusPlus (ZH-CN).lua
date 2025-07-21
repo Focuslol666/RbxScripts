@@ -108,7 +108,7 @@ local function main()
 	ConsoleFrame["Selectable"] = false;
 	ConsoleFrame["Size"] = UDim2.new(1,0,1,0);
 	ConsoleFrame["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-	ConsoleFrame["Name"] = [[控制台]];
+	ConsoleFrame["Name"] = [[Console]];
 	ConsoleFrame["Position"] = UDim2.new(0,0,0,0);
 
 
