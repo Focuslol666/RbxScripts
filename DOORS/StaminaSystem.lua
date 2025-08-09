@@ -28,7 +28,7 @@ if player.UserId == 4044271400 or player.UserId == 4287873323 or player.UserId =
     table.insert(ExecCaptions, "You can switch Infinite Stamina ON or OFF with the Toggle Button.")
 end
 
-local MAX_STAMINA = 100
+local MAX_STAMINA = _G.MAX_STAMINA or 100
 local STAMINA_DRAIN_RATE = _G.STAMINA_DRAIN_RATE or (MAX_STAMINA / 7)
 local STAMINA_RECOVER_RATE = _G.STAMINA_RECOVER_RATE or (MAX_STAMINA / 14)
 local SPRINT_SPEED_BOOST = 4
