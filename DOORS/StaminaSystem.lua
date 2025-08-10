@@ -17,20 +17,9 @@ local RunService = game:GetService("RunService")
 local GuiService = game:GetService("GuiService")
 local TweenService = game:GetService("TweenService")
 
-local ExecCaptions = {
-    "Stamina System executed successfully!",
-    "Made by @FOCUSED_LIGHT.",
-    "Press the 'Q' Key or the Button to Sprint.",
-    "This script is Alpha Version, and there may be some bugs.",
-    "Fuck @DY Film_A-101! Film_A-101's parents are dead."
-}
-if player.UserId == 4044271400 or player.UserId == 4287873323 or player.UserId == 7208141087 then
-    table.insert(ExecCaptions, "You can switch Infinite Stamina ON or OFF with the Toggle Button.")
-end
-
-local MAX_STAMINA = _G.MAX_STAMINA or 100
-local STAMINA_DRAIN_RATE = _G.STAMINA_DRAIN_RATE or (MAX_STAMINA / 7)
-local STAMINA_RECOVER_RATE = _G.STAMINA_RECOVER_RATE or (MAX_STAMINA / 14)
+local MAX_STAMINA = 100
+local STAMINA_DRAIN_RATE = MAX_STAMINA / 7
+local STAMINA_RECOVER_RATE = MAX_STAMINA / 14
 local SPRINT_SPEED_BOOST = 4
 local EXHAUSTED_SOUND_ID = "rbxassetid://8258601891"
 local RECOVER_THRESHOLD = 0.75
@@ -67,7 +56,7 @@ screenGui.Enabled = true
 
 local staminaBarPosition = UDim2.new(0.75, 0, 0.9, 0)
 
-if player.UserId == 4044271400 or player.UserId == 4287873323 or player.UserId == 7208141087 then
+if player.UserId == 4044271400 or player.UserId == 4287873323 or player.UserId == 4912979218 then
     infiniteStaminaToggle = Instance.new("TextButton")
     infiniteStaminaToggle.Name = "InfiniteStaminaToggle"
     infiniteStaminaToggle.Size = UDim2.new(0.04, 0, 0.03, 0)
@@ -459,11 +448,6 @@ end)
 updateStaminaBar()
 
 print("Stamina System executed successfully!")
-
-for _, Text in ipairs(ExecCaptions) do
-    require(mainGame).caption(Text, true)
-    task.wait(2.5)
-end
 
 game:BindToClose(function()
     vitaminDetectionEnabled = false
