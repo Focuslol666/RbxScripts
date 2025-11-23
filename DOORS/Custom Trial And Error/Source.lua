@@ -63,7 +63,7 @@ function GlitchTrial:Activate()
     
     activate:Play()
     local glitchTrial = plr.PlayerGui.MainUI.MainFrame.GlitchTrial
-    glitchTrial.TextLabel.Text = self.config.Text
+    glitchTrial.TextLabel.Text = tostring(self.config.Text)
     glitchTrial.TextLabel.TextColor3 = Color3.new(1, 1, 1)
     glitchTrial.Visible = true
     glitchTrial.ImageColor3 = Color3.new(1, 1, 1)
@@ -96,7 +96,7 @@ function GlitchTrial:Activate()
     glitchTrial.Visible = false
     
     if self.config.Ending.Enabled then
-        task.wait(self.config.Ending.Delay)
+        task.wait(tonumber(self.config.Ending.Delay) or 18)
         activate:Play()
         glitchTrial.Visible = true
         glitchTrial.TextLabel.TextColor3 = Color3.new(0, 1, 0)
