@@ -4,7 +4,7 @@
     Fixed by FOCUSED_LIGHT
     Version: V5
     
-    Press the Q key or the Gui button to enable Sprint
+    Press the Q key or the Gui button to enable sprint
     
     Player Command:
     Suicide => "/killyourself" or "/ks"
