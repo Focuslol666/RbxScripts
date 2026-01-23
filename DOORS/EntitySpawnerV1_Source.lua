@@ -276,12 +276,12 @@ Spawner.runEntity = function(entityTable)
 
                 -- Kill player
 
-                if entityTable.Config.CanKill and not Char:GetAttribute("IsDead") and not Char:GetAttribute("Invincible") and (getPlayerRoot().Position - entityModel.PrimaryPart.Position).Magnitude <= entityTable.Config.KillRange then
+                if entityTable.Config.CanKill and Char:GetAttribute("Alive") and not Char:GetAttribute("Invincibility") and (getPlayerRoot().Position - entityModel.PrimaryPart.Position).Magnitude <= entityTable.Config.KillRange then
                     task.spawn(function()
                         if Char:GetAttribute("Hiding") and not entityTable.Config.RUNFORYOURDARNLIFE then
                            return
                         end
-                        Char:SetAttribute("IsDead", true)
+                        Char:SetAttribute("Alive", false)
 
                         -- Mute entity
 
@@ -302,11 +302,16 @@ Spawner.runEntity = function(entityTable)
                         -- Death handling
                         
                         task.spawn(entityTable.Debug.OnDeath)
-                        Hum.Health = 0
+                        if replicatesignal then
+                            replicatesignal(Plr.Kill)
+                        else
+                            Hum.Health = 0
+                            Plr:SetAttribute("Alive", false)
+                        end
                         ReSt.GameStats["Player_".. Plr.Name].Total.DeathCause.Value = entityModel.Name
                         
                         if #entityTable.Config.CustomDialog > 0 then
-                            firesignal(ReSt.RemotesFolder.DeathHint.OnClientEvent, entityTable.Config.CustomDialog, "Blue")
+                            firesignal(ReSt.RemotesFolder.DeathHint.OnClientEvent, entityTable.Config.CustomDialog, entityTable.Config.CustomType)
                         end
                         
                         -- Unmute entity
