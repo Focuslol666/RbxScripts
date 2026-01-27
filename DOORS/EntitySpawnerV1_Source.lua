@@ -308,7 +308,7 @@ Spawner.runEntity = function(entityTable)
                             Hum.Health = 0
                             Plr:SetAttribute("Alive", false)
                         end
-                        ReSt.GameStats["Player_".. Plr.Name].Total.DeathCause.Value = entityTable.Config.CustomCause
+                        ReSt.GameStats["Player_".. Plr.Name].Total.DeathCause.Value = entityTable.Config.CustomCause or entityModel.Name
                         
                         if #entityTable.Config.CustomDialog > 0 then
                             firesignal(ReSt.RemotesFolder.DeathHint.OnClientEvent, entityTable.Config.CustomDialog, entityTable.Config.CustomType)
