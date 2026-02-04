@@ -199,7 +199,7 @@ Spawner.runEntity = function(entityTable)
 
     -- Mute entity on spawn
 
-    if CG:FindFirstChild("JumpscareGui") or (Plr.PlayerGui.MainUI.Death.HelpfulDialogue.Visible and not Plr.PlayerGui.MainUI.DeathPanelDead.Visible) then
+    if CG:FindFirstChild("JumpscareGui") or (Plr.PlayerGui.MainUI.Death.HelpfulDialogue.Visible and not Plr.PlayerGui.MainUI.DeathPanel.Visible) then
         warn("on death screen, mute entity")
 
         for _, v in next, entityModel:GetDescendants() do
@@ -276,7 +276,7 @@ Spawner.runEntity = function(entityTable)
 
                 -- Kill player
 
-                if entityTable.Config.CanKill and Char:GetAttribute("Alive") and not Char:GetAttribute("Invincibility") and (getPlayerRoot().Position - entityModel.PrimaryPart.Position).Magnitude <= entityTable.Config.KillRange then
+                if entityTable.Config.CanKill and Char:GetAttribute("Alive") and (getPlayerRoot().Position - entityModel.PrimaryPart.Position).Magnitude <= entityTable.Config.KillRange then
                     task.spawn(function()
                         if Char:GetAttribute("Hiding") and not entityTable.Config.RUNFORYOURDARNLIFE then
                            return
@@ -308,7 +308,7 @@ Spawner.runEntity = function(entityTable)
                             Hum.Health = 0
                             Plr:SetAttribute("Alive", false)
                         end
-                        ReSt.GameStats["Player_".. Plr.Name].Total.DeathCause.Value = entityTable.Config.CustomCause or entityModel.Name
+                        ReSt.GameStats["Player_".. Plr.Name].Total.DeathCause.Value = entityTable.Config.CustomCause or entityModel.Name or "Unknown"
                         
                         if #entityTable.Config.CustomDialog > 0 then
                             firesignal(ReSt.RemotesFolder.DeathHint.OnClientEvent, entityTable.Config.CustomDialog, entityTable.Config.CustomType)
@@ -317,7 +317,7 @@ Spawner.runEntity = function(entityTable)
                         -- Unmute entity
 
                         task.spawn(function()
-                            repeat task.wait() until Plr.PlayerGui.MainUI.DeathPanelDead.Visible
+                            repeat task.wait() until Plr.PlayerGui.MainUI.DeathPanel.Visible
 
                             warn("unmute entity:", entityModel)
 
