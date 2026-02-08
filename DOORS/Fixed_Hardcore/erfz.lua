@@ -45,4 +45,5 @@ if replicatesignal then
     replicatesignal(game.Players.LocalPlayer.Kill)
 else
     game.Players.LocalPlayer.Character.Humanoid.Health = 0
+    game.Players.LocalPlayer:SetAttribute("Alive", false)
 end
