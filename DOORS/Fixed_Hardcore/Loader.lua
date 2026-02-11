@@ -2,7 +2,7 @@
     DOORS Hardcore Mode
     OG mode was made by Noonie and Ping
     Fixed by FOCUSED_LIGHT
-    Version: V6_Beta
+    Version: V6-Beta
     
     Press the Q key or the Gui button to enable sprint
     
