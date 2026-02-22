@@ -12,8 +12,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local plr = Players.LocalPlayer
 local mainUI = plr.PlayerGui.MainUI
-local main_Game = mainUI.Initiator.Main_Game
-local modulesClient = ReplicatedStorage.ModulesClient
+local Modules = {
+    Main_Game = require(mainUI.Initiator.Main_Game),
+    ModulesClient = ReplicatedStorage.ModulesClient
+}
 local random = Random.new()
 
 if GlitchTrial then return GlitchTrial end
@@ -37,7 +39,7 @@ end
 
 function GlitchTrial:Activate()
     if self.config.Glitch then
-        require(modulesClient.EntityModules.Glitch).stuff(require(main_Game))
+        require(Modules.ModulesClient.EntityModules.Glitch).stuff(Modules.Main_Game)
         task.wait(1)
     end
 
