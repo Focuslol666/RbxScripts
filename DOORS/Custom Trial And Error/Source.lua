@@ -14,7 +14,7 @@ local plr = Players.LocalPlayer
 local mainUI = plr.PlayerGui.MainUI
 local main_Game = mainUI.Initiator.Main_Game
 local modulesClient = ReplicatedStorage.ModulesClient
-local rand = Random.new()
+local random = Random.new()
 
 if GlitchTrial then return GlitchTrial end
 
@@ -37,7 +37,7 @@ end
 
 function GlitchTrial:Activate()
     if self.config.Glitch then
-        require(modulesClient.EntityModules.Glitch).stuff(require(main_Game), workspace.CurrentRooms[plr:GetAttribute("CurrentRoom")])
+        require(modulesClient.EntityModules.Glitch).stuff(require(main_Game))
         task.wait(1)
     end
 
@@ -60,29 +60,29 @@ function GlitchTrial:Activate()
         equalizerSoundEffect.MidGain = 0
         equalizerSoundEffect.Priority = 0
     end
-    
     activate:Play()
+
     local glitchTrial = plr.PlayerGui.MainUI.MainFrame.GlitchTrial
     glitchTrial.TextLabel.Text = tostring(self.config.Text)
     glitchTrial.TextLabel.TextColor3 = Color3.new(1, 1, 1)
     glitchTrial.Visible = true
     glitchTrial.ImageColor3 = Color3.new(1, 1, 1)
-    glitchTrial.TextLabel.Position = UDim2.fromScale(rand:NextNumber(0.2, 0.8), rand:NextNumber(0.2, 0.8))
+    glitchTrial.TextLabel.Position = UDim2.fromScale(random:NextNumber(0.2, 0.8), random:NextNumber(0.2, 0.8))
     task.wait(0.125)
     glitchTrial.TextLabel.TextColor3 = Color3.new(1, 1, 1)
-    glitchTrial.TextLabel.Position = UDim2.fromScale(rand:NextNumber(0.2, 0.8), rand:NextNumber(0.2, 0.8))
+    glitchTrial.TextLabel.Position = UDim2.fromScale(random:NextNumber(0.2, 0.8), random:NextNumber(0.2, 0.8))
     glitchTrial.ImageColor3 = Color3.new(0, 1, 0)
     task.wait(0.125)
     glitchTrial.TextLabel.TextColor3 = Color3.new(0, 1, 0)
-    glitchTrial.TextLabel.Position = UDim2.fromScale(rand:NextNumber(0.2, 0.8), rand:NextNumber(0.2, 0.8))
+    glitchTrial.TextLabel.Position = UDim2.fromScale(random:NextNumber(0.2, 0.8), random:NextNumber(0.2, 0.8))
     glitchTrial.ImageColor3 = Color3.new(0, 0, 1)
     task.wait(0.125)
     glitchTrial.TextLabel.TextColor3 = Color3.new(0, 0, 1)
-    glitchTrial.TextLabel.Position = UDim2.fromScale(rand:NextNumber(0.2, 0.8), rand:NextNumber(0.2, 0.8))
+    glitchTrial.TextLabel.Position = UDim2.fromScale(random:NextNumber(0.2, 0.8), random:NextNumber(0.2, 0.8))
     glitchTrial.ImageColor3 = Color3.new(1, 0, 0)
     task.wait(0.125)
     glitchTrial.TextLabel.TextColor3 = Color3.new(1, 0, 0)
-    glitchTrial.TextLabel.Position = UDim2.fromScale(rand:NextNumber(0.2, 0.8), rand:NextNumber(0.2, 0.8))
+    glitchTrial.TextLabel.Position = UDim2.fromScale(random:NextNumber(0.2, 0.8), random:NextNumber(0.2, 0.8))
     glitchTrial.ImageColor3 = Color3.new(0, 0, 0)
     task.wait(0.125)
     glitchTrial.TextLabel.TextColor3 = Color3.new(0, 0, 0)
