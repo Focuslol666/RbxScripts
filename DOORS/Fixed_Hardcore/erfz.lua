@@ -13,13 +13,13 @@ maingame.stopcam = true
 --Make camera follow head
 task.spawn(function()
     while true do
-        if followhead == true then
+        if followhead then
             workspace.CurrentCamera.CFrame = workspace.CurrentCamera.CFrame:Lerp(game.Players.LocalPlayer.Character.Head.CFrame, 0.3)
         end
         task.wait()
     end
 end)
-humrootpart.CFrame = humrootpart.CFrame + Vector3.new(0,1,0)
+humrootpart.CFrame = humrootpart.CFrame + Vector3.new(0, 1, 0)
 HotSexOnHumanoid:AdjustSpeed(0.8)
 task.wait(0.5)
 HotSexOnHumanoid:AdjustSpeed(0.25)
@@ -39,7 +39,6 @@ task.wait(2)
 HotSexOnHumanoid:Stop()
 humrootpart.Anchored = false
 followhead = false
-local maingame = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game)
 maingame.stopcam = false
 if replicatesignal then
     replicatesignal(game.Players.LocalPlayer.Kill)
